@@ -1,8 +1,11 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
-import { performanceImages, performanceImgPositions } from "../constants/index.js";
-import {useMediaQuery} from "react-responsive";
+import {
+    performanceImages,
+    performanceImgPositions,
+} from "../constants/index.js";
+import { useMediaQuery } from "react-responsive";
 
 const Performance = () => {
     const isMobile = useMediaQuery({ query: "(max-width: 1024px)" });
@@ -10,52 +13,51 @@ const Performance = () => {
 
     useGSAP(
         () => {
-            const sectionEl = sectionRef.current;
-            if (!sectionEl) return;
+            const section = sectionRef.current;
+            if (!section) return;
 
-            // Text Animation
+            // TEXT FADE-IN
             gsap.fromTo(
                 ".content p",
-                { opacity: 0, y: 10 },
+                { opacity: 0, y: 20 },
                 {
                     opacity: 1,
                     y: 0,
-                    ease: "power1.out",
+                    ease: "power2.out",
                     scrollTrigger: {
-                        trigger: ".content p",
-                        start: "top bottom",
-                        end: "top center",
-                        scrub: true,
-                        invalidateOnRefresh: true,
+                        trigger: ".content",
+                        start: "top 85%",
+                        once: true,
                     },
                 }
             );
 
+            // MOBILE: выключаем heavy motion
             if (isMobile) return;
 
-            // Image Positioning Timeline
+            // DESKTOP ONLY — IMAGE MOTION
             const tl = gsap.timeline({
-                defaults: { duration: 2, ease: "power1.inOut", overwrite: "auto" },
+                defaults: {
+                    duration: 1.8,
+                    ease: "power2.inOut",
+                },
                 scrollTrigger: {
-                    trigger: sectionEl,
+                    trigger: section,
                     start: "top bottom",
                     end: "bottom top",
                     scrub: 1,
-                    invalidateOnRefresh: true,
                 },
             });
 
-            // Position Each Performance Image
             performanceImgPositions.forEach((item) => {
-                if (item.id === "p5") return;
+                if (item.id === "p5") return; // static img
 
                 const selector = `.${item.id}`;
                 const vars = {};
 
-                if (typeof item.left === "number") vars.left = `${item.left}%`;
-                if (typeof item.right === "number") vars.right = `${item.right}%`;
-                if (typeof item.bottom === "number") vars.bottom = `${item.bottom}%`;
-
+                if (item.left !== undefined) vars.left = `${item.left}%`;
+                if (item.right !== undefined) vars.right = `${item.right}%`;
+                if (item.bottom !== undefined) vars.bottom = `${item.bottom}%`;
                 if (item.transform) vars.transform = item.transform;
 
                 tl.to(selector, vars, 0);
@@ -69,12 +71,12 @@ const Performance = () => {
             <h2>Next-level graphics performance. Game on.</h2>
 
             <div className="wrapper">
-                {performanceImages.map((item, index) => (
+                {performanceImages.map((item, i) => (
                     <img
-                        key={index}
+                        key={i}
                         src={item.src}
                         className={item.id}
-                        alt={item.alt || `Performance Image #${index + 1}`}
+                        alt={item.alt || `Performance Image #${i + 1}`}
                     />
                 ))}
             </div>
@@ -86,14 +88,15 @@ const Performance = () => {
                     second-generation hardware-accelerated ray tracing engine that renders
                     images faster, so{" "}
                     <span className="text-white">
-            gaming feels more immersive and realistic than ever.
-          </span>{" "}
+                        gaming feels more immersive and realistic than ever.
+                    </span>{" "}
                     And Dynamic Caching optimizes fast on-chip memory to dramatically
                     increase average GPU utilization — driving a huge performance boost
                     for the most demanding pro apps and games.
                 </p>
             </div>
         </section>
-    )
-}
-export default Performance
+    );
+};
+
+export default Performance;

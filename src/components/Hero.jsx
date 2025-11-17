@@ -4,42 +4,46 @@ const Hero = () => {
     const videoRef = useRef(null);
 
     useEffect(() => {
-        const v = videoRef.current;
-        if (!v) return;
+        const video = videoRef.current;
+        if (!video) return;
 
-        // Быстрая анимация
-        v.playbackRate = 2.4;
+        // Ускоренная анимация крышки
+        video.playbackRate = 2.4;
 
-        // Гарантированное открытие MacBook
-        const forceStart = () => {
-            // Ставим начало на чуть-чуть позже нуля —
-            // чтобы не показывал закрытую крышку
-            if (v.currentTime < 0.05) {
-                v.currentTime = 0.05;
+        // Обещаем без лагов
+        const startVideo = async () => {
+            try {
+                // Чтобы не показывало момент закрытой крышки
+                if (video.currentTime < 0.05) {
+                    video.currentTime = 0.05;
+                }
+
+                await video.play();
+            } catch {
+                // Если автоплей блокнулся — пробуем снова
+                setTimeout(startVideo, 100);
             }
+        };
 
-            v.play().catch(() => {
-                // Повторная попытка через 120ms
-                setTimeout(forceStart, 120);
+        // Подготавливаем видео заранее,
+        // чтобы оно начинало играть мгновенно
+        const handleReady = () => {
+            // В Chrome бывает баг — видео готово, но play ещё нельзя.
+            requestAnimationFrame(() => {
+                startVideo();
             });
         };
 
-        // Как только браузер готов к проигрыванию — форсим старт
-        const onReady = () => {
-            forceStart();
-        };
+        // Быстрее чем loadeddata
+        video.addEventListener("loadedmetadata", handleReady);
+        video.addEventListener("canplay", handleReady);
 
-        v.addEventListener("loadeddata", onReady);
-        v.addEventListener("canplay", onReady);
-        v.addEventListener("canplaythrough", onReady);
-
-        // На всякий случай пробуем стартануть и без эвентов
-        forceStart();
+        // На всякий случай пробуем сразу
+        startVideo();
 
         return () => {
-            v.removeEventListener("loadeddata", onReady);
-            v.removeEventListener("canplay", onReady);
-            v.removeEventListener("canplaythrough", onReady);
+            video.removeEventListener("loadedmetadata", handleReady);
+            video.removeEventListener("canplay", handleReady);
         };
     }, []);
 
@@ -51,15 +55,16 @@ const Hero = () => {
                 <img src="/title.png" alt="MacBook Title" className="hero-title-img" />
             </div>
 
-            {/* Видео MacBook */}
+            {/* Видео */}
             <video
                 ref={videoRef}
                 src="/videos/hero.mp4"
-                type="video/mp4"
                 muted
                 playsInline
                 preload="auto"
                 className="hero-video"
+                disablePictureInPicture
+                disableRemotePlayback
             />
 
             {/* Кнопка */}

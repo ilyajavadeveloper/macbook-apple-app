@@ -2,22 +2,22 @@
 
 @font-face {
     font-family: "Regular";
-    src: url("/fonts/regular.otf");
+    src: url("public/fonts/regular.otf");
 }
 
 @font-face {
     font-family: "Medium";
-    src: url("/fonts/medium.otf");
+    src: url("public/fonts/medium.otf");
 }
 
 @font-face {
     font-family: "SemiBold";
-    src: url("/fonts/semibold.otf");
+    src: url("public/fonts/semibold.otf");
 }
 
 @font-face {
     font-family: "Bold";
-    src: url("/fonts/bold.otf");
+    src: url("public/fonts/bold.otf");
 }
 
 * {
@@ -113,30 +113,26 @@ body {
     }
 
     #hero {
-        @apply h-fit lg:h-[80vh] col-center mt-40 lg:mt-20 2xl:mt-[7vh];
+        @apply col-center h-fit
+        mt-32     /* mobile */
+        sm:mt-40  /* small tablets */
+        md:mt-48  /* tablets */
+        lg:mt-56  /* laptops */
+        xl:mt-64  /* desktop */
+        2xl:mt-[18vh]; /* ultra wide */
 
         div {
-            @apply relative z-10 col-center lg:translate-y-16;
+            @apply relative z-10 col-center
+            lg:translate-y-16;
 
             h1 {
-                @apply font-semibold lg:text-3xl 2xl:text-5xl text-white;
+                @apply text-white font-semibold
+                text-2xl sm:text-3xl lg:text-4xl 2xl:text-5xl;
             }
 
             img {
                 @apply container mx-auto w-2/3;
             }
-        }
-
-        video {
-            @apply mx-auto lg:translate-y-5 2xl:translate-y-0;
-        }
-
-        button {
-            @apply relative z-10 bg-primary text-white py-2 px-6 mt-10 lg:mt-0 mb-5 rounded-full font-semibold text-lg cursor-pointer hover:bg-white hover:text-black transition-all duration-300 ease-in-out;
-        }
-
-        p {
-            @apply lg:h3-semibold base-semibold;
         }
     }
 
