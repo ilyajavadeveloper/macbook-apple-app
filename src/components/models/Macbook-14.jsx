@@ -1,7 +1,3 @@
-/*
-  Optimized by ChatGPT — High-Performance Version
-*/
-
 import React, { useEffect, useMemo } from "react";
 import { useGLTF, useTexture } from "@react-three/drei";
 import useMacbookStore from "../../store";
@@ -12,21 +8,18 @@ export default function MacbookModel14(props) {
     const { color } = useMacbookStore();
     const { nodes, materials, scene } = useGLTF("/models/macbook-14-transformed.glb");
 
-    // Screen texture (SRGB → правильные цвета)
     const screen = useTexture("/screen.png");
     screen.colorSpace = SRGBColorSpace;
-    screen.needsUpdate = true;
 
-    // Один Color instance → быстрее, не жрёт CPU
     const colorInstance = useMemo(() => new Color(color), [color]);
 
     useEffect(() => {
-        scene.traverse((child) => {
+        scene.traverse(child => {
             if (!child.isMesh) return;
 
-            child.frustumCulled = true; // Оптимизация рендера
+            child.frustumCulled = true;
 
-            if (!noChangeParts.includes(child.name)) {
+            if (!noChangeParts.includes(child.name) && child.material) {
                 child.material.color = colorInstance;
             }
         });
@@ -47,9 +40,7 @@ export default function MacbookModel14(props) {
                         material={isScreen ? null : mat}
                         rotation={[Math.PI / 2, 0, 0]}
                     >
-                        {isScreen && (
-                            <meshBasicMaterial map={screen} toneMapped={false} />
-                        )}
+                        {isScreen && <meshBasicMaterial map={screen} toneMapped={false} />}
                     </mesh>
                 );
             })}

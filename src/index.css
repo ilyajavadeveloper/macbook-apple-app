@@ -88,29 +88,48 @@ body {
 }
 
 @layer components {
-    header {
-        @apply w-screen fixed top-0 left-0 z-50 flex-center bg-black min-h-[7vh];
+    /* NAVBAR ROOT */
+    .navbar {
+        @apply fixed top-0 left-0 w-full z-50 bg-black/80 backdrop-blur-xl;
+        @apply h-[60px] sm:h-[70px] border-b border-white/10 flex items-center;
+    }
 
-        nav {
-            @apply container mx-auto flex-between px-5 2xl:px-0;
+    .nav-inner {
+        @apply container mx-auto px-2 lg:px-6 flex justify-start items-center gap-10;
+    }
 
-            img {
-                @apply cursor-pointer hover:-translate-y-0.5 transition-all duration-300 ease-in-out;
+    /* LOGO */
+    .logo img {
+        @apply w-6 sm:w-7 lg:w-8 cursor-pointer transition-transform duration-200 hover:scale-105;
+    }
 
-                button {
-                    @apply bg-transparent border-none outline-none cursor-pointer;
-                }
-            }
+    /* LINKS */
+    .nav-links {
+        @apply hidden md:flex gap-6 lg:gap-10 ml-6; /* сдвинул левее */
+    }
 
-            ul {
-                @apply flex-center gap-8;
+    .nav-item {
+        @apply text-white/80 text-sm lg:text-base cursor-pointer select-none;
+        @apply hover:text-white transition-colors duration-200;
+        @apply px-2 py-1 rounded-md hover:bg-white/5;
+    }
 
-                a {
-                    @apply hidden md:block text-white opacity-80 font-regular text-sm cursor-pointer hover:opacity-100 transition-all duration-300 ease-in-out;
-                }
-            }
+    /* удобные тап-зоны */
+    @media (max-width: 1024px) {
+        .nav-item {
+            @apply py-2 px-4 text-lg;
         }
     }
+
+    /* ICONS */
+    .nav-icons {
+        @apply ml-auto flex items-center gap-4 lg:gap-6;
+    }
+
+    .nav-icons button img {
+        @apply w-5 sm:w-6 opacity-80 hover:opacity-100 transition;
+    }
+
 
     #hero {
         @apply col-center h-fit

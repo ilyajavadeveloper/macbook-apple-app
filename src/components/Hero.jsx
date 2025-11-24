@@ -1,3 +1,4 @@
+// components/Hero.jsx
 import { useEffect, useRef } from "react";
 
 const Hero = () => {
@@ -7,70 +8,57 @@ const Hero = () => {
         const video = videoRef.current;
         if (!video) return;
 
-        // Ускоренная анимация крышки
         video.playbackRate = 2.4;
 
-        // Обещаем без лагов
-        const startVideo = async () => {
+        const safePlay = async () => {
             try {
-                // Чтобы не показывало момент закрытой крышки
-                if (video.currentTime < 0.05) {
-                    video.currentTime = 0.05;
-                }
-
+                if (video.currentTime < 0.05) video.currentTime = 0.05;
                 await video.play();
-            } catch {
-                // Если автоплей блокнулся — пробуем снова
-                setTimeout(startVideo, 100);
+                video.style.opacity = "1";
+            } catch {}
+        };
+
+        video.addEventListener("canplay", safePlay, { once: true });
+        safePlay();
+
+        // THROTTLED REPLAY ON SCROLL
+        let locked = false;
+        const onScroll = () => {
+            if (locked) return;
+            locked = true;
+
+            if (window.scrollY < 50) {
+                video.currentTime = 0.05;
+                safePlay();
             }
+
+            setTimeout(() => (locked = false), 300);
         };
 
-        // Подготавливаем видео заранее,
-        // чтобы оно начинало играть мгновенно
-        const handleReady = () => {
-            // В Chrome бывает баг — видео готово, но play ещё нельзя.
-            requestAnimationFrame(() => {
-                startVideo();
-            });
-        };
-
-        // Быстрее чем loadeddata
-        video.addEventListener("loadedmetadata", handleReady);
-        video.addEventListener("canplay", handleReady);
-
-        // На всякий случай пробуем сразу
-        startVideo();
+        window.addEventListener("scroll", onScroll);
 
         return () => {
-            video.removeEventListener("loadedmetadata", handleReady);
-            video.removeEventListener("canplay", handleReady);
+            window.removeEventListener("scroll", onScroll);
         };
     }, []);
 
     return (
-        <section id="hero" className="hero-section relative">
-            {/* Заголовок */}
-            <div className="text-center z-10 relative">
+        <section id="hero" className="hero-section">
+            <div className="hero-content">
                 <h1 className="hero-title">MacBook Pro</h1>
-                <img src="/title.png" alt="MacBook Title" className="hero-title-img" />
+                <img src="/title.png" alt="" className="hero-title-img" />
             </div>
 
-            {/* Видео */}
             <video
                 ref={videoRef}
                 src="/videos/hero.mp4"
                 muted
                 playsInline
                 preload="auto"
-                className="hero-video"
-                disablePictureInPicture
-                disableRemotePlayback
+                className="hero-video opacity-0 transition-opacity duration-700"
             />
 
-            {/* Кнопка */}
             <button className="hero-btn">Buy</button>
-
-            {/* Цена */}
             <p className="hero-price">From $1599 or $133/mo for 12 months</p>
         </section>
     );

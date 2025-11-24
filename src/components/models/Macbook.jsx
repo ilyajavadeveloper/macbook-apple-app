@@ -8,6 +8,7 @@ export default function MacbookModel(props) {
     const { color, texture } = useMacbookStore();
     const { nodes, materials, scene } = useGLTF("/models/macbook-transformed.glb");
 
+    // video texture
     const screen = useVideoTexture(texture, {
         start: false,
         loop: true,
@@ -17,17 +18,16 @@ export default function MacbookModel(props) {
         playsInline: true,
     });
 
-    // Оптимизация: один Color экземпляр
     const colorInstance = useMemo(() => new Color(color), [color]);
 
     useEffect(() => {
-        scene.traverse((child) => {
-            if (child.isMesh) {
-                child.frustumCulled = true;
+        scene.traverse(child => {
+            if (!child.isMesh) return;
 
-                if (!noChangeParts.includes(child.name)) {
-                    child.material.color = colorInstance;
-                }
+            child.frustumCulled = true;
+
+            if (!noChangeParts.includes(child.name) && child.material) {
+                child.material.color = colorInstance;
             }
         });
     }, [colorInstance, scene]);
@@ -37,16 +37,17 @@ export default function MacbookModel(props) {
             {Object.entries(nodes).map(([key, mesh]) => {
                 if (!mesh.geometry) return null;
 
+                const isScreen = key === "Object_123";
+                const mat = materials[mesh.material?.name];
+
                 return (
                     <mesh
                         key={key}
                         geometry={mesh.geometry}
-                        material={key === "Object_123" ? undefined : materials[mesh.material?.name]}
+                        material={isScreen ? null : mat}
                         rotation={[Math.PI / 2, 0, 0]}
                     >
-                        {key === "Object_123" && (
-                            <meshBasicMaterial map={screen} toneMapped={false} />
-                        )}
+                        {isScreen && <meshBasicMaterial map={screen} toneMapped={false} />}
                     </mesh>
                 );
             })}

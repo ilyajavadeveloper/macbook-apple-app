@@ -1,3 +1,4 @@
+// components/ProductViewer.jsx
 import useMacbookStore from "../store";
 import clsx from "clsx";
 import { Canvas } from "@react-three/fiber";
@@ -9,8 +10,10 @@ const ProductViewer = () => {
     const { color, scale, setColor, setScale } = useMacbookStore();
     const isMobile = useMediaQuery({ query: "(max-width: 1024px)" });
 
-    // На мобилках модели идеально соответствуют 0.03-0.05
-    const computedScale = isMobile ? scale - 0.03 : scale;
+    const baseScale = scale ?? 0.08;
+    const computedScale = isMobile
+        ? Math.max(0.03, baseScale - 0.03)
+        : baseScale;
 
     return (
         <section id="product-viewer">
@@ -70,12 +73,11 @@ const ProductViewer = () => {
                 camera={{ position: [0, 2, 5], fov: 45 }}
                 dpr={[1, 1.5]}
                 gl={{
-                    antialias: false,          // GPU friendly
+                    antialias: false,
                     powerPreference: "high-performance",
                 }}
             >
                 <StudioLights />
-
                 <ModelSwitcher scale={computedScale} isMobile={isMobile} />
             </Canvas>
         </section>

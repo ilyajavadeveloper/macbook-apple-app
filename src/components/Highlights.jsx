@@ -1,3 +1,4 @@
+// components/Highlights.jsx
 import { useMediaQuery } from "react-responsive";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -6,19 +7,21 @@ const Highlights = () => {
     const isMobile = useMediaQuery({ query: "(max-width: 1024px)" });
 
     useGSAP(() => {
+        if (isMobile) return;
+
         gsap.fromTo(
-            [".left-column", ".right-column"],
-            { opacity: 0, y: 30 },
+            ".highlight-col",
+            { opacity: 0, y: 20 },
             {
                 opacity: 1,
                 y: 0,
+                stagger: 0.25,
+                duration: 0.6,
                 ease: "power2.out",
-                stagger: 0.3,
-                duration: 0.9,
                 scrollTrigger: {
                     trigger: "#highlights",
-                    start: isMobile ? "top 90%" : "top 70%",
-                    once: true,         // отключает тяжелые перерисовки
+                    start: "top 70%",
+                    once: true,
                 },
             }
         );
@@ -30,36 +33,28 @@ const Highlights = () => {
             <h3>Here’s what you get with the new MacBook Pro.</h3>
 
             <div className="masonry">
-                <div className="left-column">
+                <div className="highlight-col left-column">
                     <div>
-                        <img src="/laptop.png" alt="Laptop" />
+                        <img src="/laptop.png" alt="" loading="lazy" />
                         <p>Fly through demanding tasks up to 9.8x faster.</p>
                     </div>
+
                     <div>
-                        <img src="/sun.png" alt="Sun" />
-                        <p>
-                            A stunning <br />
-                            Liquid Retina XDR <br />
-                            display.
-                        </p>
+                        <img src="/sun.png" alt="" loading="lazy" />
+                        <p>A stunning Liquid Retina XDR display.</p>
                     </div>
                 </div>
 
-                <div className="right-column">
+                <div className="highlight-col right-column">
                     <div className="apple-gradient">
-                        <img src="/ai.png" alt="AI" />
-                        <p>
-                            Built for <br />
-                            <span>Apple Intelligence.</span>
-                        </p>
+                        <img src="/ai.png" alt="" loading="lazy" />
+                        <p>Built for <span>Apple Intelligence.</span></p>
                     </div>
+
                     <div>
-                        <img src="/battery.png" alt="Battery" />
+                        <img src="/battery.png" alt="" loading="lazy" />
                         <p>
-                            Up to
-                            <span className="green-gradient"> 14 more hours </span>
-                            battery life.
-                            <span className="text-dark-100"> (Up to 24 hours total.)</span>
+                            Up to <span className="green-gradient">14 more hours</span> battery life.
                         </p>
                     </div>
                 </div>

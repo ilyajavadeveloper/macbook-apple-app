@@ -1,77 +1,72 @@
-import { useRef} from "react";
-import {PresentationControls} from "@react-three/drei";
-import gsap from 'gsap';
-
-import MacbookModel16 from "../models/Macbook-16.jsx";
+import { useRef } from "react";
+import { PresentationControls } from "@react-three/drei";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 import MacbookModel14 from "../models/Macbook-14.jsx";
-import {useGSAP} from "@gsap/react";
-const ANIMATION_DURATION = 1;
-const OFFSET_DISTANCE = 5;
+import MacbookModel16 from "../models/Macbook-16.jsx";
 
-const fadeMeshes = (group, opacity) => {
-    if(!group) return;
+const ANIMATION_DURATION = 1;
+const OFFSET = 5;
+
+const tweenGroup = (group, props) => {
+    if (!group) return;
+    gsap.to(group.position, { ...props, duration: ANIMATION_DURATION, ease: "power2.out" });
+};
+
+const tweenOpacity = (group, opacity) => {
+    if (!group) return;
 
     group.traverse((child) => {
-        if(child.isMesh) {
-            child.material.transparent = true;
-            gsap.to(child.material, { opacity, duration: ANIMATION_DURATION })
-        }
-    })
-}
-
-const moveGroup = (group, x) => {
-    if(!group) return;
-
-    gsap.to(group.position, { x, duration: ANIMATION_DURATION })
-}
+        if (!child.isMesh || !child.material) return;
+        child.material.transparent = true;
+        gsap.to(child.material, { opacity, duration: ANIMATION_DURATION, ease: "power2.out" });
+    });
+};
 
 const ModelSwitcher = ({ scale, isMobile }) => {
-    const SCALE_LARGE_DESKTOP = 0.08;
-    const SCALE_LARGE_MOBILE = 0.05;
+    const smallRef = useRef();
+    const largeRef = useRef();
 
-    const smallMacbookRef = useRef();
-    const largeMacbookRef = useRef();
+    const SCALE_BIG = isMobile ? 0.05 : 0.08;
+    const SCALE_SMALL = isMobile ? 0.03 : 0.06;
 
-    const showLargeMacbook = scale === SCALE_LARGE_DESKTOP || scale === SCALE_LARGE_MOBILE;
+    const showLarge = scale === SCALE_BIG;
 
     useGSAP(() => {
-        if(showLargeMacbook) {
-            moveGroup(smallMacbookRef.current, -OFFSET_DISTANCE);
-            moveGroup(largeMacbookRef.current, 0);
+        if (showLarge) {
+            tweenGroup(smallRef.current, { x: -OFFSET });
+            tweenGroup(largeRef.current, { x: 0 });
 
-            fadeMeshes(smallMacbookRef.current, 0);
-            fadeMeshes(largeMacbookRef.current, 1);
+            tweenOpacity(smallRef.current, 0);
+            tweenOpacity(largeRef.current, 1);
         } else {
-            moveGroup(smallMacbookRef.current, 0);
-            moveGroup(largeMacbookRef.current, OFFSET_DISTANCE);
+            tweenGroup(smallRef.current, { x: 0 });
+            tweenGroup(largeRef.current, { x: OFFSET });
 
-            fadeMeshes(smallMacbookRef.current, 1);
-            fadeMeshes(largeMacbookRef.current, 0);
+            tweenOpacity(smallRef.current, 1);
+            tweenOpacity(largeRef.current, 0);
         }
-    }, [scale])
-
-    const controlsConfig = {
-        snap: true,
-        speed: 1,
-        zoom: 1,
-        azimuth: [-Infinity, Infinity],
-        config: {mass:1, tension: 0, friction: 26}
-    }
+    }, [showLarge]);
 
     return (
-        <>
-            <PresentationControls {...controlsConfig}>
-                <group ref={largeMacbookRef}>
-                    <MacbookModel16 scale={isMobile ? 0.05 : 0.08} />
-                </group>
-            </PresentationControls>
+        <PresentationControls
+            snap
+            speed={1}
+            zoom={1}
+            azimuth={[-Infinity, Infinity]}
+            config={{ mass: 1, tension: 0, friction: 26 }}
+        >
+            {/* 16-inch */}
+            <group ref={largeRef} position={[showLarge ? 0 : OFFSET, 0, 0]}>
+                <MacbookModel16 scale={SCALE_BIG} />
+            </group>
 
-            <PresentationControls {...controlsConfig}>
-                <group ref={smallMacbookRef}>
-                    <MacbookModel14 scale={isMobile ? 0.03 : 0.06} />
-                </group>
-            </PresentationControls>
-        </>
-    )
-}
-export default ModelSwitcher
+            {/* 14-inch */}
+            <group ref={smallRef} position={[showLarge ? -OFFSET : 0, 0, 0]}>
+                <MacbookModel14 scale={SCALE_SMALL} />
+            </group>
+        </PresentationControls>
+    );
+};
+
+export default ModelSwitcher;
