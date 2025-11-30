@@ -19,14 +19,23 @@ const Performance = () => {
         const section = sectionRef.current;
         if (!section) return;
 
-        /* ========== MOBILE: DISABLE ALL ANIMATIONS ========== */
+        /* =================== MOBILE =================== */
         if (isMobile) {
             gsap.set(".perf-text", { opacity: 1, y: 0 });
-            gsap.set(".perf-img", { opacity: 1, y: 0 });
+
+            // Mobile GPU glow + tilt effect
+            gsap.to(".perf-img", {
+                scale: 1.05,
+                duration: 3,
+                ease: "power1.inOut",
+                repeat: -1,
+                yoyo: true,
+            });
+
             return;
         }
 
-        /* ========== DESKTOP FADE-IN ========== */
+        /* =================== DESKTOP TEXT FADE =================== */
         gsap.fromTo(
             ".perf-text",
             { opacity: 0, y: 20 },
@@ -42,7 +51,7 @@ const Performance = () => {
             }
         );
 
-        /* ========== DESKTOP PARALLAX (unchanged) ========== */
+        /* =================== DESKTOP GPU PARALLAX (unchanged) =================== */
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: section,
@@ -66,6 +75,22 @@ const Performance = () => {
                 0
             );
         });
+
+        /* =================== DESKTOP GPU GLOW =================== */
+        gsap.fromTo(
+            ".perf-img",
+            { filter: "drop-shadow(0px 0px 0px rgba(0,0,0,0))" },
+            {
+                filter: "drop-shadow(0px 0px 22px rgba(255,255,255,0.25))",
+                duration: 2,
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top center",
+                    end: "bottom center",
+                    scrub: true,
+                },
+            }
+        );
     }, [isMobile]);
 
     return (
@@ -75,31 +100,29 @@ const Performance = () => {
             className="
                 w-full
                 px-4
-                mt-16 md:mt-28
+                mt-28
                 flex flex-col items-center
+                relative
             "
         >
             {/* TITLE */}
-            <h2
-                className="
-                    text-3xl md:text-5xl
-                    font-semibold
-                    text-center
-                    mb-10 md:mb-16
-                    tracking-tight
-                "
-            >
+            <h2 className="
+                text-3xl md:text-5xl
+                font-semibold
+                text-center
+                mb-10 md:mb-16
+                tracking-tight
+            ">
                 Next-level graphics performance. Game on.
             </h2>
 
-            {/* ==== IMAGES: ON MOBILE → STACKED UNDER ASSASSIN ==== */}
+            {/* GPU IMAGES */}
             <div
                 className={`
                     w-full
-                    ${
-                    isMobile
-                        ? "grid grid-cols-2 gap-4 max-w-[430px] place-items-center"
-                        : "relative h-[90vh]"
+                    ${isMobile
+                    ? "grid grid-cols-2 gap-4 max-w-[430px] place-items-center"
+                    : "relative h-[90vh]"
                 }
                 `}
             >
@@ -111,9 +134,10 @@ const Performance = () => {
                         className={`
                             perf-img ${item.id}
                             select-none
+                            transition-all duration-700
                             ${
                             isMobile
-                                ? "relative object-contain w-[80%] max-w-[150px] opacity-100 static"
+                                ? "relative object-contain w-[80%] max-w-[150px] static"
                                 : "absolute"
                         }
                         `}
@@ -122,11 +146,11 @@ const Performance = () => {
                 ))}
             </div>
 
-            {/* ==== TEXT UNDER VIDEO ON MOBILE ==== */}
+            {/* TEXT */}
             <div
                 className="
                     perf-text
-                    mt-8
+                    mt-10
                     max-w-xl
                     text-gray-300
                     text-center
@@ -137,7 +161,7 @@ const Performance = () => {
                 <p className="text-base md:text-lg">
                     Run graphics-intensive workflows with fast responsiveness.
                     The M4 chip features a second-generation hardware-accelerated
-                    ray tracing engine…
+                    ray tracing engine, enabling stunning lighting realism…
                 </p>
             </div>
         </section>
