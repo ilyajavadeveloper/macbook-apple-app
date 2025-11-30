@@ -1,4 +1,3 @@
-// components/three/ModelSwitcher.jsx
 import { useRef } from "react";
 import { PresentationControls } from "@react-three/drei";
 import gsap from "gsap";
@@ -7,14 +6,11 @@ import MacbookModel14 from "../models/Macbook-14.jsx";
 import MacbookModel16 from "../models/Macbook-16.jsx";
 
 const ANIMATION_DURATION = 1;
+const OFFSET = 5;
 
 const tweenGroup = (group, props) => {
     if (!group) return;
-    gsap.to(group.position, {
-        ...props,
-        duration: ANIMATION_DURATION,
-        ease: "power2.out",
-    });
+    gsap.to(group.position, { ...props, duration: ANIMATION_DURATION, ease: "power2.out" });
 };
 
 const tweenOpacity = (group, opacity) => {
@@ -23,11 +19,7 @@ const tweenOpacity = (group, opacity) => {
     group.traverse((child) => {
         if (!child.isMesh || !child.material) return;
         child.material.transparent = true;
-        gsap.to(child.material, {
-            opacity,
-            duration: ANIMATION_DURATION,
-            ease: "power2.out",
-        });
+        gsap.to(child.material, { opacity, duration: ANIMATION_DURATION, ease: "power2.out" });
     });
 };
 
@@ -35,12 +27,8 @@ const ModelSwitcher = ({ scale, isMobile }) => {
     const smallRef = useRef();
     const largeRef = useRef();
 
-    // 🎯 Адаптивные размеры
-    const SCALE_BIG = isMobile ? 0.045 : 0.08;
+    const SCALE_BIG = isMobile ? 0.05 : 0.08;
     const SCALE_SMALL = isMobile ? 0.03 : 0.06;
-
-    // 🎯 Адаптивный offset — чтобы не вылетало за экран на мобилке
-    const OFFSET = isMobile ? 2.2 : 5;
 
     const showLarge = scale === SCALE_BIG;
 
@@ -58,13 +46,13 @@ const ModelSwitcher = ({ scale, isMobile }) => {
             tweenOpacity(smallRef.current, 1);
             tweenOpacity(largeRef.current, 0);
         }
-    }, [showLarge, isMobile]);
+    }, [showLarge]);
 
     return (
         <PresentationControls
             snap
             speed={1}
-            zoom={isMobile ? 0.9 : 1}
+            zoom={1}
             azimuth={[-Infinity, Infinity]}
             config={{ mass: 1, tension: 0, friction: 26 }}
         >
