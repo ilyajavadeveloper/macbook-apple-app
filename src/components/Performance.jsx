@@ -19,13 +19,14 @@ const Performance = () => {
         const section = sectionRef.current;
         if (!section) return;
 
-        /* ========== MOBILE: NO ANIMATIONS, JUST SHOW CONTENT ========== */
+        /* ========== MOBILE: DISABLE ALL ANIMATIONS ========== */
         if (isMobile) {
             gsap.set(".perf-text", { opacity: 1, y: 0 });
+            gsap.set(".perf-img", { opacity: 1, y: 0 });
             return;
         }
 
-        /* ========== DESKTOP: TEXT FADE-IN ========== */
+        /* ========== DESKTOP FADE-IN ========== */
         gsap.fromTo(
             ".perf-text",
             { opacity: 0, y: 20 },
@@ -74,29 +75,31 @@ const Performance = () => {
             className="
                 w-full
                 px-4
-                mt-28
+                mt-16 md:mt-28
                 flex flex-col items-center
-                relative
             "
         >
             {/* TITLE */}
-            <h2 className="
-                text-3xl md:text-5xl
-                font-semibold
-                text-center
-                mb-10 md:mb-16
-                tracking-tight
-            ">
+            <h2
+                className="
+                    text-3xl md:text-5xl
+                    font-semibold
+                    text-center
+                    mb-10 md:mb-16
+                    tracking-tight
+                "
+            >
                 Next-level graphics performance. Game on.
             </h2>
 
-            {/* IMAGE WRAPPER */}
+            {/* ==== IMAGES: ON MOBILE → STACKED UNDER ASSASSIN ==== */}
             <div
                 className={`
                     w-full
-                    ${isMobile
-                    ? "grid grid-cols-2 gap-4 place-items-center max-w-[420px]"
-                    : "relative h-[90vh]"
+                    ${
+                    isMobile
+                        ? "grid grid-cols-2 gap-4 max-w-[430px] place-items-center"
+                        : "relative h-[90vh]"
                 }
                 `}
             >
@@ -106,11 +109,12 @@ const Performance = () => {
                         src={item.src}
                         loading="lazy"
                         className={`
-                            ${item.id}
+                            perf-img ${item.id}
                             select-none
-                            ${isMobile
-                            ? "relative object-contain w-[80%] max-w-[150px] opacity-100 static"
-                            : "absolute"
+                            ${
+                            isMobile
+                                ? "relative object-contain w-[80%] max-w-[150px] opacity-100 static"
+                                : "absolute"
                         }
                         `}
                         alt=""
@@ -118,7 +122,7 @@ const Performance = () => {
                 ))}
             </div>
 
-            {/* TEXT BLOCK */}
+            {/* ==== TEXT UNDER VIDEO ON MOBILE ==== */}
             <div
                 className="
                     perf-text
