@@ -21,85 +21,85 @@ const ProductViewer = () => {
             className="
                 w-full
                 px-4
-                mt-28
+                mt-24
                 flex flex-col items-center
             "
         >
-            {/* TITLE */}
-            <h2
-                className="
-                    text-center
-                    text-3xl md:text-5xl
-                    font-semibold
-                    mb-10
-                    tracking-tight
-                "
-            >
+            <h2 className="text-center text-3xl md:text-5xl font-semibold mb-8">
                 Take a closer look.
             </h2>
 
-            {/* ===== CONTROLS ===== */}
+            {/* CONTROLS */}
             <div
                 className="
                     controls
-                    flex flex-col
-                    items-center
-                    gap-5
+                    flex flex-col items-center
+                    md:items-start
                 "
             >
-                {/* COLOR SWITCH */}
-                <div className="flex gap-4">
-                    <div
-                        onClick={() => setColor("#adb5bd")}
-                        className={clsx(
-                            "w-8 h-8 rounded-full cursor-pointer border border-white/20",
-                            "bg-neutral-300",
-                            color === "#adb5bd" && "ring-2 ring-white"
-                        )}
-                    />
-                    <div
-                        onClick={() => setColor("#2e2c2e")}
-                        className={clsx(
-                            "w-8 h-8 rounded-full cursor-pointer border border-white/20",
-                            "bg-neutral-900",
-                            color === "#2e2c2e" && "ring-2 ring-white"
-                        )}
-                    />
-                </div>
+                <div
+                    className="
+                        flex-center
+                        gap-6
+                        mt-3
+                        flex-wrap
+                        justify-center
+                    "
+                >
+                    {/* COLOR SWITCH */}
+                    <div className="color-control flex gap-3">
+                        <div
+                            onClick={() => setColor("#adb5bd")}
+                            className={clsx(
+                                "w-7 h-7 rounded-full cursor-pointer border border-white/20",
+                                "bg-neutral-300",
+                                color === "#adb5bd" && "ring-2 ring-white"
+                            )}
+                        />
+                        <div
+                            onClick={() => setColor("#2e2c2e")}
+                            className={clsx(
+                                "w-7 h-7 rounded-full cursor-pointer border border-white/20",
+                                "bg-neutral-900",
+                                color === "#2e2c2e" && "ring-2 ring-white"
+                            )}
+                        />
+                    </div>
 
-                {/* SIZE SWITCH */}
-                <div className="flex gap-4">
-                    <button
-                        onClick={() => setScale(0.06)}
-                        className={clsx(
-                            "px-5 py-1.5 rounded-full text-sm border border-white/20 transition",
-                            scale === 0.06
-                                ? "bg-white text-black shadow"
-                                : "text-white bg-transparent"
-                        )}
-                    >
-                        14"
-                    </button>
+                    {/* SIZE SWITCH */}
+                    <div className="size-control flex gap-3">
+                        <div
+                            onClick={() => setScale(0.06)}
+                            className={clsx(
+                                "px-4 py-1 rounded-full cursor-pointer text-sm border border-white/20",
+                                scale === 0.06
+                                    ? "bg-white text-black"
+                                    : "bg-transparent text-white"
+                            )}
+                        >
+                            <p>14"</p>
+                        </div>
 
-                    <button
-                        onClick={() => setScale(0.08)}
-                        className={clsx(
-                            "px-5 py-1.5 rounded-full text-sm border border-white/20 transition",
-                            scale === 0.08
-                                ? "bg-white text-black shadow"
-                                : "text-white bg-transparent"
-                        )}
-                    >
-                        16"
-                    </button>
+                        <div
+                            onClick={() => setScale(0.08)}
+                            className={clsx(
+                                "px-4 py-1 rounded-full cursor-pointer text-sm border border-white/20",
+                                scale === 0.08
+                                    ? "bg-white text-black"
+                                    : "bg-transparent text-white"
+                            )}
+                        >
+                            <p>16"</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {/* ===== 3D VIEWER ===== */}
+            {/* 3D VIEWER */}
             <div
                 className="
                     w-full
-                    mt-12
+                    mt-10
                     flex justify-center
                 "
             >
@@ -107,21 +107,16 @@ const ProductViewer = () => {
                     className="
                         w-full
                         max-w-[900px]
-                        aspect-[16/9]
-                        md:aspect-[16/8]
-                        rounded-xl
-                        overflow-hidden
+                        h-[350px]
+                        md:h-[550px]
                     "
                 >
                     <Canvas
                         id="canvas"
-                        camera={{
-                            position: [0, 2, 5],
-                            fov: isMobile ? 50 : 45, // 🔥 мобильный FOV для лучшего кадра
-                        }}
+                        camera={{ position: [0, 2, 5], fov: 45 }}
                         dpr={[1, 1.5]}
                         gl={{
-                            antialias: true,
+                            antialias: false,
                             powerPreference: "high-performance",
                         }}
                     >
