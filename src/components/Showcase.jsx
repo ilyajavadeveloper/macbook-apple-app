@@ -1,4 +1,3 @@
-// components/Showcase.jsx
 import { useMediaQuery } from "react-responsive";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -30,11 +29,7 @@ const Showcase = () => {
     return (
         <section
             id="showcase"
-            className="
-                w-full
-                px-4
-                mt-28
-            "
+            className="w-full px-4 mt-28"
         >
             {/* ==== MEDIA BLOCK ==== */}
             <div
@@ -78,39 +73,40 @@ const Showcase = () => {
                 </div>
             </div>
 
-            {/* ==== CONTENT BLOCK ==== */}
+            {/* ==== CONTENT BLOCK (FIXED MOBILE) ==== */}
             <div
-                className="
+                className={`
                     content
                     opacity-0 translate-y-10
-                    mt-10 md:mt-24
-                "
+                    ${isTablet ? "mt-8" : "mt-24"}
+                `}
             >
                 <div
-                    className="
+                    className={`
                         wrapper
                         flex flex-col md:flex-row
                         gap-10 md:gap-20
+                        items-center md:items-start
                         justify-center md:justify-between
-                        items-start
-                        max-w-6xl
-                        mx-auto
-                    "
+                        max-w-6xl mx-auto
+                        ${isTablet ? "text-center" : ""}
+                    `}
                 >
                     {/* ==== TEXT SIDE ==== */}
                     <div
                         className="
                             lg:max-w-md
-                            text-center md:text-left
                             px-2
+                            w-full
+                            flex flex-col items-center md:items-start
                         "
                     >
                         <h2 className="text-3xl md:text-5xl font-semibold tracking-tight">
                             Rocket Chip
                         </h2>
 
-                        <div className="space-y-5 mt-6 px-1">
-                            <p className="text-gray-300 text-base md:text-xl leading-relaxed max-w-[420px] mx-auto md:mx-0">
+                        <div className="space-y-5 mt-6 px-1 max-w-[450px]">
+                            <p className="text-gray-300 text-base md:text-xl leading-relaxed">
                                 Introducing{" "}
                                 <span className="text-white font-semibold">M4</span>,
                                 the next generation of Apple silicon.
@@ -118,21 +114,25 @@ const Showcase = () => {
                         </div>
                     </div>
 
-                    {/* ==== STATS SIDE ==== */}
+                    {/* ==== STATS BLOCK (CENTER ON MOBILE) ==== */}
                     <div
-                        className="
-                            max-w-xs
+                        className={`
                             space-y-10
-                            text-center md:text-left
                             px-2
-                        "
+                            ${isTablet
+                            ? "w-full max-w-[400px] mx-auto mt-4"
+                            : "max-w-xs text-left"
+                        }
+                        `}
                     >
                         <div>
                             <p className="text-gray-300 text-sm md:text-base">Up to</p>
                             <h3 className="text-3xl md:text-5xl font-bold tracking-tight">
                                 4x faster
                             </h3>
-                            <p className="text-gray-300 text-sm md:text-base">pro rendering vs M2</p>
+                            <p className="text-gray-300 text-sm md:text-base">
+                                pro rendering vs M2
+                            </p>
                         </div>
 
                         <div>
@@ -140,7 +140,9 @@ const Showcase = () => {
                             <h3 className="text-3xl md:text-5xl font-bold tracking-tight">
                                 1.5x faster
                             </h3>
-                            <p className="text-gray-300 text-sm md:text-base">CPU performance vs M2</p>
+                            <p className="text-gray-300 text-sm md:text-base">
+                                CPU performance vs M2
+                            </p>
                         </div>
                     </div>
                 </div>
