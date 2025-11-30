@@ -34,9 +34,9 @@ const Performance = () => {
             }
         );
 
+        // DESKTOP ONLY LOGIC — DON'T TOUCH
         if (isMobile) return;
 
-        // IMAGE MOTION — DESKTOP ONLY
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: section,
@@ -63,25 +63,63 @@ const Performance = () => {
     }, [isMobile]);
 
     return (
-        <section id="performance" ref={sectionRef}>
-            <h2>Next-level graphics performance. Game on.</h2>
+        <section
+            id="performance"
+            ref={sectionRef}
+            className="
+                w-full
+                px-4
+                mt-24
+                flex flex-col items-center
+                relative
+            "
+        >
+            <h2 className="text-3xl md:text-5xl font-semibold text-center mb-10">
+                Next-level graphics performance. Game on.
+            </h2>
 
-            <div className="wrapper">
+            {/* WRAPPER — desktop absolute images, mobile stacked grid */}
+            <div
+                className={`
+                    wrapper
+                    w-full
+                    ${isMobile
+                    ? "grid grid-cols-2 gap-4 place-items-center max-w-[420px]"
+                    : "relative h-[90vh]"}
+                `}
+            >
                 {performanceImages.map((item) => (
                     <img
                         key={item.id}
                         src={item.src}
-                        className={item.id}
+                        className={`
+                            ${item.id}
+                            ${isMobile
+                            ? "relative w-full max-w-[150px] object-contain static opacity-100"
+                            : "absolute"}
+                        `}
                         alt=""
                         loading="lazy"
                     />
                 ))}
             </div>
 
-            <div className="content perf-text">
+            {/* TEXT BLOCK */}
+            <div
+                className="
+                    content perf-text
+                    mt-10
+                    max-w-3xl
+                    text-gray-300
+                    text-center
+                    leading-relaxed
+                    px-2
+                "
+            >
                 <p>
-                    Run graphics-intensive workflows with fast responsiveness. The M4 chip
-                    features a second-generation hardware-accelerated ray tracing engine…
+                    Run graphics-intensive workflows with fast responsiveness.
+                    The M4 chip features a second-generation hardware-accelerated
+                    ray tracing engine…
                 </p>
             </div>
         </section>

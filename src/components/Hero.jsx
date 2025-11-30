@@ -43,10 +43,36 @@ const Hero = () => {
     }, []);
 
     return (
-        <section id="hero" className="hero-section">
-            <div className="hero-content">
-                <h1 className="hero-title">MacBook Pro</h1>
-                <img src="/title.png" alt="" className="hero-title-img" />
+        <section
+            id="hero"
+            className="
+                hero-section
+                w-full min-h-screen relative
+                flex flex-col items-center justify-center
+                text-center px-4
+            "
+        >
+            <div className="hero-content flex flex-col items-center gap-2">
+                <h1
+                    className="
+                        hero-title
+                        text-5xl font-bold
+                        md:text-7xl
+                        leading-none
+                    "
+                >
+                    MacBook Pro
+                </h1>
+
+                <img
+                    src="/title.png"
+                    alt=""
+                    className="
+                        hero-title-img
+                        w-40 md:w-64
+                        mt-2 select-none
+                    "
+                />
             </div>
 
             <video
@@ -55,11 +81,36 @@ const Hero = () => {
                 muted
                 playsInline
                 preload="auto"
-                className="hero-video opacity-0 transition-opacity duration-700"
+                className="
+                    hero-video
+                    opacity-0 transition-opacity duration-700
+                    w-full max-w-[900px]
+                    mt-6
+                    rounded-xl
+                "
             />
 
-            <button className="hero-btn">Buy</button>
-            <p className="hero-price">From $1599 or $133/mo for 12 months</p>
+            <button
+                className="
+                    hero-btn
+                    mt-6 md:mt-10
+                    bg-white text-black font-semibold
+                    px-6 py-2.5 rounded-full
+                    text-lg md:text-xl
+                    shadow-md active:scale-95 transition
+                "
+            >
+                Buy
+            </button>
+
+            <p
+                className="
+                    hero-price
+                    mt-3 text-sm md:text-base text-gray-300
+                "
+            >
+                From $1599 or $133/mo for 12 months
+            </p>
         </section>
     );
 };
