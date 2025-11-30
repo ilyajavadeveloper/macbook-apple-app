@@ -21,19 +21,85 @@ const ProductViewer = () => {
             className="
                 w-full
                 px-4
-                mt-24
+                mt-28
                 flex flex-col items-center
             "
         >
             {/* TITLE */}
-            <h2 className="text-center text-3xl md:text-5xl font-semibold mb-10">
+            <h2
+                className="
+                    text-center
+                    text-3xl md:text-5xl
+                    font-semibold
+                    mb-10
+                    tracking-tight
+                "
+            >
                 Take a closer look.
             </h2>
 
-            {/* ========== 3D MODEL BLOCK  ========== */}
+            {/* ===== CONTROLS ===== */}
+            <div
+                className="
+                    controls
+                    flex flex-col
+                    items-center
+                    gap-5
+                "
+            >
+                {/* COLOR SWITCH */}
+                <div className="flex gap-4">
+                    <div
+                        onClick={() => setColor("#adb5bd")}
+                        className={clsx(
+                            "w-8 h-8 rounded-full cursor-pointer border border-white/20",
+                            "bg-neutral-300",
+                            color === "#adb5bd" && "ring-2 ring-white"
+                        )}
+                    />
+                    <div
+                        onClick={() => setColor("#2e2c2e")}
+                        className={clsx(
+                            "w-8 h-8 rounded-full cursor-pointer border border-white/20",
+                            "bg-neutral-900",
+                            color === "#2e2c2e" && "ring-2 ring-white"
+                        )}
+                    />
+                </div>
+
+                {/* SIZE SWITCH */}
+                <div className="flex gap-4">
+                    <button
+                        onClick={() => setScale(0.06)}
+                        className={clsx(
+                            "px-5 py-1.5 rounded-full text-sm border border-white/20 transition",
+                            scale === 0.06
+                                ? "bg-white text-black shadow"
+                                : "text-white bg-transparent"
+                        )}
+                    >
+                        14"
+                    </button>
+
+                    <button
+                        onClick={() => setScale(0.08)}
+                        className={clsx(
+                            "px-5 py-1.5 rounded-full text-sm border border-white/20 transition",
+                            scale === 0.08
+                                ? "bg-white text-black shadow"
+                                : "text-white bg-transparent"
+                        )}
+                    >
+                        16"
+                    </button>
+                </div>
+            </div>
+
+            {/* ===== 3D VIEWER ===== */}
             <div
                 className="
                     w-full
+                    mt-12
                     flex justify-center
                 "
             >
@@ -51,7 +117,7 @@ const ProductViewer = () => {
                         id="canvas"
                         camera={{
                             position: [0, 2, 5],
-                            fov: isMobile ? 50 : 45,
+                            fov: isMobile ? 50 : 45, // 🔥 мобильный FOV для лучшего кадра
                         }}
                         dpr={[1, 1.5]}
                         gl={{
@@ -62,64 +128,6 @@ const ProductViewer = () => {
                         <StudioLights />
                         <ModelSwitcher scale={computedScale} isMobile={isMobile} />
                     </Canvas>
-                </div>
-            </div>
-
-            {/* ========== CONTROLS UNDER THE MODEL ========== */}
-            <div
-                className="
-                    controls
-                    flex flex-col items-center
-                    gap-6
-                    mt-10
-                    w-full
-                "
-            >
-                {/* COLOR SWITCH */}
-                <div className="flex gap-4">
-                    <div
-                        onClick={() => setColor("#adb5bd")}
-                        className={clsx(
-                            "w-9 h-9 rounded-full cursor-pointer border border-white/20",
-                            "bg-neutral-300",
-                            color === "#adb5bd" && "ring-2 ring-white"
-                        )}
-                    />
-                    <div
-                        onClick={() => setColor("#2e2c2e")}
-                        className={clsx(
-                            "w-9 h-9 rounded-full cursor-pointer border border-white/20",
-                            "bg-neutral-900",
-                            color === "#2e2c2e" && "ring-2 ring-white"
-                        )}
-                    />
-                </div>
-
-                {/* SIZE SWITCH */}
-                <div className="flex gap-4">
-                    <button
-                        onClick={() => setScale(0.06)}
-                        className={clsx(
-                            "px-6 py-2 rounded-full text-sm border border-white/20 transition",
-                            scale === 0.06
-                                ? "bg-white text-black shadow"
-                                : "bg-transparent text-white"
-                        )}
-                    >
-                        14"
-                    </button>
-
-                    <button
-                        onClick={() => setScale(0.08)}
-                        className={clsx(
-                            "px-6 py-2 rounded-full text-sm border border-white/20 transition",
-                            scale === 0.08
-                                ? "bg-white text-black shadow"
-                                : "bg-transparent text-white"
-                        )}
-                    >
-                        16"
-                    </button>
                 </div>
             </div>
         </section>
