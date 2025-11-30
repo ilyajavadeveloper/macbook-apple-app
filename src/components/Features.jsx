@@ -17,7 +17,7 @@ const ModelScroll = () => {
     const isMobile = useMediaQuery({ query: "(max-width: 1024px)" });
     const { setTexture } = useMacbookStore();
 
-    // PRELOAD FEATURE VIDEOS ONCE
+    // Preload feature videos
     useEffect(() => {
         featureSequence.forEach((feature) => {
             const v = document.createElement("video");
@@ -37,7 +37,7 @@ const ModelScroll = () => {
             const group = groupRef.current;
             if (!group) return;
 
-            // MODEL ROTATION (desktop only)
+            /* DESKTOP ROTATION (unchanged) */
             if (!isMobile) {
                 const modelTimeline = gsap.timeline({
                     scrollTrigger: {
@@ -46,6 +46,7 @@ const ModelScroll = () => {
                         end: "bottom top",
                         scrub: 1,
                         pin: true,
+                        anticipatePin: 1,
                     },
                 });
 
@@ -55,7 +56,7 @@ const ModelScroll = () => {
                 });
             }
 
-            // SYNC CONTENT + VIDEO TEXTURES
+            /* TEXTURE SYNC */
             const contentTimeline = gsap.timeline({
                 scrollTrigger: {
                     trigger: "#f-canvas",
@@ -66,15 +67,12 @@ const ModelScroll = () => {
             });
 
             featureSequence.forEach((feature, index) => {
-                const boxClass = `.box${index + 1}`;
-                const videoPath = feature.videoPath;
-
                 contentTimeline
-                    .call(() => setTexture(videoPath))
-                    .to(boxClass, {
+                    .call(() => setTexture(feature.videoPath))
+                    .to(`.box${index + 1}`, {
                         opacity: 1,
                         y: 0,
-                        duration: 0.5,
+                        duration: 0.45,
                         ease: "power1.out",
                     });
             });
@@ -82,15 +80,16 @@ const ModelScroll = () => {
         { dependencies: [setTexture, isMobile] }
     );
 
-    const isMobileQuery = useMediaQuery({ query: "(max-width: 1024px)" });
-    const scale = useMemo(() => (isMobileQuery ? 0.045 : 0.08), [isMobileQuery]);
+    const scale = useMemo(() => (isMobile ? 0.043 : 0.08), [isMobile]);
 
     return (
         <group ref={groupRef}>
             <Suspense
                 fallback={
                     <Html>
-                        <h1 className="text-white text-3xl uppercase">Loading...</h1>
+                        <h1 className="text-white text-3xl uppercase tracking-wider">
+                            Loading…
+                        </h1>
                     </Html>
                 }
             >
@@ -109,27 +108,33 @@ const Features = () => {
         <section
             id="features"
             className="
-                relative
-                w-full
+                relative w-full
                 flex flex-col items-center
                 px-4
-                mt-24
+                mt-28
             "
         >
-            <h2 className="text-4xl md:text-6xl font-semibold text-center mb-16">
+            <h2
+                className="
+                    text-center
+                    text-4xl md:text-6xl
+                    font-semibold
+                    tracking-tight
+                    mb-14
+                "
+            >
                 See it all in a new light.
             </h2>
 
-            {/* MOBILE: Canvas becomes normal block */}
-            {/* DESKTOP: Canvas stays pinned */}
             <div
                 className={clsx(
                     "w-full",
                     isMobile
-                        ? "relative max-w-[450px] mx-auto"
+                        ? "relative max-w-[460px] mx-auto"
                         : "relative h-[200vh] w-full"
                 )}
             >
+                {/* CANVAS */}
                 <Canvas
                     id="f-canvas"
                     camera={{ fov: 45, position: [0, 0.5, 5] }}
@@ -137,20 +142,26 @@ const Features = () => {
                         antialias: false,
                         powerPreference: "high-performance",
                     }}
-                    dpr={[1, 1.5]}
+                    dpr={[1, 1.6]}
                     className="w-full h-full"
                 >
                     <StudioLights />
-                    <ambientLight intensity={0.5} />
+                    <ambientLight intensity={0.45} />
                     <ModelScroll />
                 </Canvas>
 
-                {/* FEATURE TEXT BOXES */}
+                {/* FEATURES BOXES */}
                 <div
                     className={clsx(
                         "pointer-events-none",
                         isMobile
-                            ? "relative mt-12 flex flex-col gap-6"
+                            ? `
+                                relative 
+                                mt-12 
+                                flex flex-col 
+                                gap-8 
+                                pb-14
+                              `
                             : "absolute inset-0"
                     )}
                 >
@@ -161,17 +172,34 @@ const Features = () => {
                                 "box opacity-0 translate-y-10 transition-all",
                                 `box${index + 1}`,
                                 isMobile
-                                    ? "relative bg-black/40 backdrop-blur-md p-4 rounded-xl mx-auto text-center max-w-[340px]"
+                                    ? `
+                                      relative 
+                                      bg-black/40 
+                                      backdrop-blur-md 
+                                      p-5 
+                                      rounded-xl 
+                                      mx-auto 
+                                      text-center 
+                                      max-w-[360px]
+                                      shadow-lg
+                                    `
                                     : feature.styles
                             )}
                         >
                             <img
                                 src={feature.icon}
                                 alt={feature.highlight}
-                                className="w-6 h-6 mx-auto mb-2"
+                                className="w-7 h-7 mx-auto mb-3 select-none"
                             />
-                            <p className="text-gray-200 leading-tight">
-                                <span className="text-white block">
+
+                            <p
+                                className="
+                                    text-gray-200
+                                    leading-snug
+                                    text-[15px]
+                                "
+                            >
+                                <span className="text-white block font-semibold mb-1">
                                     {feature.highlight}
                                 </span>
                                 {feature.text}

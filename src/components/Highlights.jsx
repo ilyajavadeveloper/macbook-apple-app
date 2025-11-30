@@ -6,6 +6,7 @@ import gsap from "gsap";
 const Highlights = () => {
     const isMobile = useMediaQuery({ query: "(max-width: 1024px)" });
 
+    // ========= DESKTOP ANIMATIONS =========
     useGSAP(() => {
         if (isMobile) return;
 
@@ -37,11 +38,13 @@ const Highlights = () => {
                 flex flex-col items-center
             "
         >
+            {/* ===== TITLE ===== */}
             <h2
                 className="
                     text-3xl md:text-5xl
                     font-semibold
                     text-center
+                    leading-tight
                 "
             >
                 There’s never been a better time to upgrade.
@@ -50,63 +53,141 @@ const Highlights = () => {
             <h3
                 className="
                     text-lg md:text-2xl
-                    text-center text-gray-300
+                    text-center
+                    text-gray-300
                     mt-3 mb-12
                 "
             >
                 Here’s what you get with the new MacBook Pro.
             </h3>
 
-            {/* LAYOUT FIXED FOR MOBILE */}
+            {/* ===== GRID WRAPPER ===== */}
             <div
                 className={`
-                    masonry 
                     w-full 
                     flex 
-                    ${isMobile ? "flex-col gap-8" : "flex-row justify-center gap-16"}
+                    ${isMobile
+                    ? "flex-col gap-6 items-center"
+                    : "flex-row gap-16 justify-center"
+                }
                 `}
             >
-                {/* LEFT COLUMN */}
+                {/* ===== LEFT COLUMN ===== */}
                 <div
                     className={`
-                        highlight-col left-column 
-                        flex flex-col gap-8
-                        ${isMobile ? "w-full items-center text-center" : "w-auto"}
+                        highlight-col left-column
+                        flex flex-col gap-6
+                        ${isMobile ? "w-full items-center text-center" : ""}
                     `}
                 >
-                    <div className="bg-black/30 p-4 rounded-2xl backdrop-blur-md max-w-[380px]">
-                        <img src="/laptop.png" alt="" loading="lazy" className="mx-auto mb-3 w-28 md:w-auto" />
-                        <p className="text-gray-200">
+                    <div className="
+                        bg-black/30
+                        p-5
+                        rounded-2xl
+                        backdrop-blur-md
+                        w-full
+                        max-w-[340px]
+                        shadow-[0_0_20px_rgba(255,255,255,0.05)]
+                    ">
+                        <img
+                            src="/laptop.png"
+                            alt="Laptop"
+                            loading="lazy"
+                            className="
+                                mx-auto mb-3
+                                w-[120px]
+                                md:w-36
+                                object-contain
+                                select-none
+                            "
+                        />
+                        <p className="text-gray-200 text-sm md:text-lg leading-snug">
                             Fly through demanding tasks up to 9.8x faster.
                         </p>
                     </div>
 
-                    <div className="bg-black/30 p-4 rounded-2xl backdrop-blur-md max-w-[380px]">
-                        <img src="/sun.png" alt="" loading="lazy" className="mx-auto mb-3 w-20 md:w-auto" />
-                        <p className="text-gray-200">
+                    <div className="
+                        bg-black/30
+                        p-5
+                        rounded-2xl
+                        backdrop-blur-md
+                        w-full
+                        max-w-[340px]
+                        shadow-[0_0_20px_rgba(255,255,255,0.05)]
+                    ">
+                        <img
+                            src="/sun.png"
+                            alt="Display"
+                            loading="lazy"
+                            className="
+                                mx-auto mb-3
+                                w-[90px]
+                                md:w-28
+                                object-contain
+                                select-none
+                            "
+                        />
+                        <p className="text-gray-200 text-sm md:text-lg leading-snug">
                             A stunning Liquid Retina XDR display.
                         </p>
                     </div>
                 </div>
 
-                {/* RIGHT COLUMN */}
+                {/* ===== RIGHT COLUMN ===== */}
                 <div
                     className={`
-                        highlight-col right-column 
-                        flex flex-col gap-8
-                        ${isMobile ? "w-full items-center text-center" : "w-auto"}
+                        highlight-col right-column
+                        flex flex-col gap-6
+                        ${isMobile ? "w-full items-center text-center" : ""}
                     `}
                 >
-                    <div className="apple-gradient p-4 rounded-2xl max-w-[380px]">
-                        <img src="/ai.png" alt="" loading="lazy" className="mx-auto mb-3 w-24 md:w-auto" />
-                        <p className="text-white">
+                    <div className="
+                        apple-gradient
+                        p-5
+                        rounded-2xl
+                        w-full
+                        max-w-[340px]
+                        shadow-[0_0_25px_rgba(255,255,255,0.1)]
+                    ">
+                        <img
+                            src="/ai.png"
+                            alt="AI"
+                            loading="lazy"
+                            className="
+                                mx-auto mb-3
+                                w-[100px]
+                                md:w-32
+                                object-contain
+                                select-none
+                            "
+                        />
+                        <p className="text-white text-sm md:text-lg leading-snug">
                             Built for <span className="font-semibold">Apple Intelligence.</span>
                         </p>
                     </div>
 
-                    <div className="bg-black/30 p-4 rounded-2xl backdrop-blur-md max-w-[380px]">
-                        <img src="/battery.png" alt="" loading="lazy" className="mx-auto mb-3 w-24 md:w-auto" />
-                        <p className="text-gray-200">
+                    <div className="
+                        bg-black/30
+                        p-5
+                        rounded-2xl
+                        backdrop-blur-md
+                        w-full
+                        max-w-[340px]
+                        shadow-[0_0_20px_rgba(255,255,255,0.05)]
+                    ">
+                        <img
+                            src="/battery.png"
+                            alt="Battery"
+                            loading="lazy"
+                            className="
+                                mx-auto mb-3
+                                w-[100px]
+                                md:w-32
+                                object-contain
+                                select-none
+                            "
+                        />
+                        <p className="text-gray-200 text-sm md:text-lg leading-snug">
                             Up to{" "}
                             <span className="green-gradient font-semibold">
                                 14 more hours

@@ -36,28 +36,24 @@ const Hero = () => {
         };
 
         window.addEventListener("scroll", onScroll);
-
-        return () => {
-            window.removeEventListener("scroll", onScroll);
-        };
+        return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
     return (
         <section
             id="hero"
             className="
-                hero-section
                 w-full min-h-screen relative
                 flex flex-col items-center justify-center
                 text-center px-4
+                pt-20 md:pt-32
             "
         >
-            <div className="hero-content flex flex-col items-center gap-2">
+            {/* TEXT */}
+            <div className="flex flex-col items-center gap-2">
                 <h1
                     className="
-                        hero-title
-                        text-5xl font-bold
-                        md:text-7xl
+                        text-5xl md:text-7xl font-bold tracking-tight
                         leading-none
                     "
                 >
@@ -66,36 +62,50 @@ const Hero = () => {
 
                 <img
                     src="/title.png"
-                    alt=""
+                    alt="MacBook Pro"
+                    decoding="async"
+                    loading="eager"
+                    fetchpriority="high"
                     className="
-                        hero-title-img
                         w-40 md:w-64
                         mt-2 select-none
                     "
                 />
             </div>
 
-            <video
-                ref={videoRef}
-                src="/videos/hero.mp4"
-                muted
-                playsInline
-                preload="auto"
+            {/* VIDEO WRAPPER → prevents layout jump */}
+            <div
                 className="
-                    hero-video
-                    opacity-0 transition-opacity duration-700
-                    w-full max-w-[900px]
+                    w-full
+                    max-w-[950px]
+                    aspect-video
                     mt-6
                     rounded-xl
+                    overflow-hidden
                 "
-            />
+            >
+                <video
+                    ref={videoRef}
+                    src="/videos/hero.mp4"
+                    muted
+                    playsInline
+                    preload="auto"
+                    disablePictureInPicture
+                    disableRemotePlayback
+                    className="
+                        w-full h-full object-cover
+                        opacity-0 transition-opacity duration-500
+                    "
+                    poster="/videos/hero-poster.jpg"
+                />
+            </div>
 
+            {/* BUTTON */}
             <button
                 className="
-                    hero-btn
-                    mt-6 md:mt-10
+                    mt-8 md:mt-10
                     bg-white text-black font-semibold
-                    px-6 py-2.5 rounded-full
+                    px-7 py-2.5 rounded-full
                     text-lg md:text-xl
                     shadow-md active:scale-95 transition
                 "
@@ -103,12 +113,8 @@ const Hero = () => {
                 Buy
             </button>
 
-            <p
-                className="
-                    hero-price
-                    mt-3 text-sm md:text-base text-gray-300
-                "
-            >
+            {/* PRICE */}
+            <p className="mt-3 text-sm md:text-base text-gray-300">
                 From $1599 or $133/mo for 12 months
             </p>
         </section>

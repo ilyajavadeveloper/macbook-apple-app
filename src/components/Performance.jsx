@@ -1,3 +1,4 @@
+// components/Performance.jsx
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -34,7 +35,7 @@ const Performance = () => {
             }
         );
 
-        // DESKTOP ONLY LOGIC — DON'T TOUCH
+        // DESKTOP PARALLAX — DO NOT TOUCH
         if (isMobile) return;
 
         const tl = gsap.timeline({
@@ -69,54 +70,63 @@ const Performance = () => {
             className="
                 w-full
                 px-4
-                mt-24
+                mt-28
                 flex flex-col items-center
                 relative
             "
         >
-            <h2 className="text-3xl md:text-5xl font-semibold text-center mb-10">
+            {/* TITLE */}
+            <h2 className="
+                text-3xl md:text-5xl
+                font-semibold
+                text-center
+                mb-10 md:mb-16
+                tracking-tight
+            ">
                 Next-level graphics performance. Game on.
             </h2>
 
-            {/* WRAPPER — desktop absolute images, mobile stacked grid */}
+            {/* IMAGE WRAPPER */}
             <div
                 className={`
-                    wrapper
                     w-full
                     ${isMobile
-                    ? "grid grid-cols-2 gap-4 place-items-center max-w-[420px]"
-                    : "relative h-[90vh]"}
+                    ? "grid grid-cols-2 gap-3 place-items-center max-w-[430px]"
+                    : "relative h-[90vh]"
+                }
                 `}
             >
                 {performanceImages.map((item) => (
                     <img
                         key={item.id}
                         src={item.src}
+                        loading="lazy"
                         className={`
+                            select-none
                             ${item.id}
                             ${isMobile
-                            ? "relative w-full max-w-[150px] object-contain static opacity-100"
-                            : "absolute"}
+                            ? "relative object-contain w-[80%] max-w-[150px] static opacity-100"
+                            : "absolute"
+                        }
                         `}
                         alt=""
-                        loading="lazy"
                     />
                 ))}
             </div>
 
-            {/* TEXT BLOCK */}
+            {/* TEXT BLOCK — FIXED SPACING */}
             <div
                 className="
-                    content perf-text
-                    mt-10
-                    max-w-3xl
+                    perf-text
+                    mt-8          /* ↓ было 12, теперь меньше */
+                    max-w-xl      /* ↓ сжали, чтобы текст виден на мобилке */
                     text-gray-300
                     text-center
                     leading-relaxed
-                    px-2
+                    px-3
                 "
             >
-                <p>
+                <p className="text-base md:text-lg">
                     Run graphics-intensive workflows with fast responsiveness.
                     The M4 chip features a second-generation hardware-accelerated
                     ray tracing engine…

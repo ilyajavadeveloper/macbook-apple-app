@@ -36,11 +36,14 @@ const Showcase = () => {
                 mt-28
             "
         >
-            {/* MEDIA */}
+            {/* ==== MEDIA BLOCK ==== */}
             <div
                 className={`
                     media relative w-full 
-                    ${isTablet ? "h-[300px] rounded-xl overflow-hidden" : "h-screen"}
+                    ${isTablet
+                    ? "h-[320px] sm:h-[380px] rounded-2xl overflow-hidden"
+                    : "h-screen"
+                }
                 `}
             >
                 <video
@@ -60,21 +63,22 @@ const Showcase = () => {
                 <div
                     className={`
                         mask absolute inset-0 flex justify-center items-center
-                        ${isTablet ? "scale-[0.6] opacity-80" : ""}
+                        ${isTablet ? "scale-[0.6] opacity-90" : ""}
                     `}
                 >
                     <img
                         src="/mask-logo.svg"
-                        alt=""
+                        alt="M4 Logo"
                         loading="lazy"
                         className="
                             w-[60%] md:w-[40%]
+                            select-none
                         "
                     />
                 </div>
             </div>
 
-            {/* CONTENT */}
+            {/* ==== CONTENT BLOCK ==== */}
             <div
                 className="
                     content
@@ -86,44 +90,57 @@ const Showcase = () => {
                     className="
                         wrapper
                         flex flex-col md:flex-row
-                        gap-14 md:gap-20
-                        justify-between
+                        gap-10 md:gap-20
+                        justify-center md:justify-between
                         items-start
                         max-w-6xl
                         mx-auto
                     "
                 >
-                    {/* TEXT */}
-                    <div className="lg:max-w-md text-center md:text-left">
-                        <h2 className="text-3xl md:text-5xl font-semibold">
+                    {/* ==== TEXT SIDE ==== */}
+                    <div
+                        className="
+                            lg:max-w-md
+                            text-center md:text-left
+                            px-2
+                        "
+                    >
+                        <h2 className="text-3xl md:text-5xl font-semibold tracking-tight">
                             Rocket Chip
                         </h2>
 
-                        <div className="space-y-5 mt-7">
-                            <p className="text-gray-300 text-lg md:text-xl">
+                        <div className="space-y-5 mt-6 px-1">
+                            <p className="text-gray-300 text-base md:text-xl leading-relaxed max-w-[420px] mx-auto md:mx-0">
                                 Introducing{" "}
-                                <span className="text-white">M4</span>, the next
-                                generation of Apple silicon.
+                                <span className="text-white font-semibold">M4</span>,
+                                the next generation of Apple silicon.
                             </p>
                         </div>
                     </div>
 
-                    {/* STATS */}
-                    <div className="max-w-3xs space-y-12 text-center md:text-left">
+                    {/* ==== STATS SIDE ==== */}
+                    <div
+                        className="
+                            max-w-xs
+                            space-y-10
+                            text-center md:text-left
+                            px-2
+                        "
+                    >
                         <div>
-                            <p className="text-gray-300">Up to</p>
-                            <h3 className="text-4xl md:text-5xl font-bold">
+                            <p className="text-gray-300 text-sm md:text-base">Up to</p>
+                            <h3 className="text-3xl md:text-5xl font-bold tracking-tight">
                                 4x faster
                             </h3>
-                            <p className="text-gray-300">pro rendering vs M2</p>
+                            <p className="text-gray-300 text-sm md:text-base">pro rendering vs M2</p>
                         </div>
 
                         <div>
-                            <p className="text-gray-300">Up to</p>
-                            <h3 className="text-4xl md:text-5xl font-bold">
+                            <p className="text-gray-300 text-sm md:text-base">Up to</p>
+                            <h3 className="text-3xl md:text-5xl font-bold tracking-tight">
                                 1.5x faster
                             </h3>
-                            <p className="text-gray-300">CPU performance vs M2</p>
+                            <p className="text-gray-300 text-sm md:text-base">CPU performance vs M2</p>
                         </div>
                     </div>
                 </div>

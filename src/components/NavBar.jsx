@@ -15,18 +15,10 @@ const NavBar = () => {
     const handleNavClick = (label) => {
         const id = label.toLowerCase();
 
-        if (id === "store") {
-            return window.scrollTo({ top: 0, behavior: "smooth" });
-        }
-        if (id === "mac") {
-            return scrollTo("#product-viewer");
-        }
-        if (id === "vision") {
-            return scrollTo("#features");
-        }
-        if (id === "chip") {
-            return scrollTo("#performance");
-        }
+        if (id === "store") return window.scrollTo({ top: 0, behavior: "smooth" });
+        if (id === "mac") return scrollTo("#product-viewer");
+        if (id === "vision") return scrollTo("#features");
+        if (id === "chip") return scrollTo("#performance");
 
         scrollTo("#hero");
     };
@@ -34,44 +26,41 @@ const NavBar = () => {
     return (
         <header
             className="
-                fixed top-0 left-0 w-full
+                fixed top-0 left-0
+                w-full
                 z-50
-                backdrop-blur-xl bg-black/20
-                border-b border-white/5
+                backdrop-blur-2xl bg-black/20
+                border-b border-white/10
+                transition
             "
         >
             <nav
                 className="
-                    nav-inner
                     max-w-7xl mx-auto
                     flex items-center justify-between
                     px-4 py-3
                 "
             >
                 {/* LOGO */}
-                <a
-                    href="/"
-                    className="
-                        logo
-                        flex-shrink-0
-                    "
-                >
+                <a href="/" className="flex-shrink-0">
                     <img
                         src="/logo.svg"
                         alt="Apple logo"
-                        className="w-6 h-6 md:w-7 md:h-7"
+                        className="w-6 h-6 md:w-7 md:h-7 select-none"
                     />
                 </a>
 
-                {/* NAV LINKS → scrollable row on mobile */}
+                {/* NAV LINKS */}
                 <ul
                     className="
-                        nav-links
-                        flex gap-6 md:gap-10
+                        flex-1 flex
+                        gap-6 md:gap-10
+                        justify-center
+                        items-center
                         text-sm md:text-[15px]
                         overflow-x-auto whitespace-nowrap
                         no-scrollbar
-                        flex-1 justify-center
+                        px-2
                     "
                 >
                     {navLinks.map(({ label }) => (
@@ -79,12 +68,12 @@ const NavBar = () => {
                             key={label}
                             onClick={() => handleNavClick(label)}
                             className="
-                                nav-item
                                 cursor-pointer
                                 text-gray-300 hover:text-white
-                                transition
-                                py-1
+                                transition-colors
+                                py-1 px-1
                                 flex-shrink-0
+                                font-medium
                             "
                         >
                             {label}
@@ -92,26 +81,25 @@ const NavBar = () => {
                     ))}
                 </ul>
 
-                {/* ICONS RIGHT SIDE */}
+                {/* ICONS */}
                 <div
                     className="
-                        nav-icons
                         flex items-center gap-4
                         flex-shrink-0
                     "
                 >
-                    <button>
+                    <button className="active:scale-90 transition">
                         <img
                             src="/search.svg"
                             alt="Search"
-                            className="w-5 h-5 md:w-6 md:h-6"
+                            className="w-5 h-5 md:w-6 md:h-6 select-none"
                         />
                     </button>
-                    <button>
+                    <button className="active:scale-90 transition">
                         <img
                             src="/cart.svg"
                             alt="Cart"
-                            className="w-5 h-5 md:w-6 md:h-6"
+                            className="w-5 h-5 md:w-6 md:h-6 select-none"
                         />
                     </button>
                 </div>
