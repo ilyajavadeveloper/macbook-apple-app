@@ -19,7 +19,13 @@ const Performance = () => {
         const section = sectionRef.current;
         if (!section) return;
 
-        // TEXT FADE-IN
+        /* ========== MOBILE: NO ANIMATIONS, JUST SHOW CONTENT ========== */
+        if (isMobile) {
+            gsap.set(".perf-text", { opacity: 1, y: 0 });
+            return;
+        }
+
+        /* ========== DESKTOP: TEXT FADE-IN ========== */
         gsap.fromTo(
             ".perf-text",
             { opacity: 0, y: 20 },
@@ -35,9 +41,7 @@ const Performance = () => {
             }
         );
 
-        // DESKTOP PARALLAX — DO NOT TOUCH
-        if (isMobile) return;
-
+        /* ========== DESKTOP PARALLAX (unchanged) ========== */
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: section,
@@ -91,7 +95,7 @@ const Performance = () => {
                 className={`
                     w-full
                     ${isMobile
-                    ? "grid grid-cols-2 gap-3 place-items-center max-w-[430px]"
+                    ? "grid grid-cols-2 gap-4 place-items-center max-w-[420px]"
                     : "relative h-[90vh]"
                 }
                 `}
@@ -102,10 +106,10 @@ const Performance = () => {
                         src={item.src}
                         loading="lazy"
                         className={`
-                            select-none
                             ${item.id}
+                            select-none
                             ${isMobile
-                            ? "relative object-contain w-[80%] max-w-[150px] static opacity-100"
+                            ? "relative object-contain w-[80%] max-w-[150px] opacity-100 static"
                             : "absolute"
                         }
                         `}
@@ -114,12 +118,12 @@ const Performance = () => {
                 ))}
             </div>
 
-            {/* TEXT BLOCK — FIXED SPACING */}
+            {/* TEXT BLOCK */}
             <div
                 className="
                     perf-text
-                    mt-8          /* ↓ было 12, теперь меньше */
-                    max-w-xl      /* ↓ сжали, чтобы текст виден на мобилке */
+                    mt-8
+                    max-w-xl
                     text-gray-300
                     text-center
                     leading-relaxed
