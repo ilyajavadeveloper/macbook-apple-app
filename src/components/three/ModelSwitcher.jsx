@@ -1,7 +1,9 @@
+// components/three/ModelSwitcher.jsx
 import { useRef } from "react";
 import { PresentationControls } from "@react-three/drei";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import useMacbookStore from "../../store";
 import MacbookModel14 from "../models/Macbook-14.jsx";
 import MacbookModel16 from "../models/Macbook-16.jsx";
 
@@ -23,14 +25,16 @@ const tweenOpacity = (group, opacity) => {
     });
 };
 
-const ModelSwitcher = ({ scale, isMobile }) => {
+const ModelSwitcher = ({ isMobile }) => {
+    const { model } = useMacbookStore();
+
     const smallRef = useRef();
     const largeRef = useRef();
 
     const SCALE_BIG = isMobile ? 0.05 : 0.08;
     const SCALE_SMALL = isMobile ? 0.03 : 0.06;
 
-    const showLarge = scale === SCALE_BIG;
+    const showLarge = model === "16";
 
     useGSAP(() => {
         if (showLarge) {
