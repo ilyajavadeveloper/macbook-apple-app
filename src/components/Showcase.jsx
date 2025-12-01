@@ -27,20 +27,8 @@ const Showcase = () => {
     }, [isTablet]);
 
     return (
-        <section
-            id="showcase"
-            className="w-full px-4 mt-28"
-        >
-            {/* ==== MEDIA BLOCK ==== */}
-            <div
-                className={`
-                    media relative w-full 
-                    ${isTablet
-                    ? "h-[320px] sm:h-[380px] rounded-2xl overflow-hidden"
-                    : "h-screen"
-                }
-                `}
-            >
+        <section id="showcase">
+            <div className="media">
                 <video
                     src="/videos/game.mp4"
                     autoPlay
@@ -48,101 +36,37 @@ const Showcase = () => {
                     loop
                     playsInline
                     preload="auto"
-                    className="
-                        w-full
-                        h-full
-                        object-cover
-                    "
+                    className="gpu-boost w-full h-full object-cover"
                 />
-
-                <div
-                    className={`
-                        mask absolute inset-0 flex justify-center items-center
-                        ${isTablet ? "scale-[0.6] opacity-90" : ""}
-                    `}
-                >
-                    <img
-                        src="/mask-logo.svg"
-                        alt="M4 Logo"
-                        loading="lazy"
-                        className="
-                            w-[60%] md:w-[40%]
-                            select-none
-                        "
-                    />
+                <div className="mask">
+                    <img src="/mask-logo.svg" alt="" loading="lazy" />
                 </div>
             </div>
 
-            {/* ==== CONTENT BLOCK (FIXED MOBILE) ==== */}
-            <div
-                className={`
-                    content
-                    opacity-0 translate-y-10
-                    ${isTablet ? "mt-8" : "mt-24"}
-                `}
-            >
-                <div
-                    className={`
-                        wrapper
-                        flex flex-col md:flex-row
-                        gap-10 md:gap-20
-                        items-center md:items-start
-                        justify-center md:justify-between
-                        max-w-6xl mx-auto
-                        ${isTablet ? "text-center" : ""}
-                    `}
-                >
-                    {/* ==== TEXT SIDE ==== */}
-                    <div
-                        className="
-                            lg:max-w-md
-                            px-2
-                            w-full
-                            flex flex-col items-center md:items-start
-                        "
-                    >
-                        <h2 className="text-3xl md:text-5xl font-semibold tracking-tight">
-                            Rocket Chip
-                        </h2>
-
-                        <div className="space-y-5 mt-6 px-1 max-w-[450px]">
-                            <p className="text-gray-300 text-base md:text-xl leading-relaxed">
-                                Introducing{" "}
-                                <span className="text-white font-semibold">M4</span>,
-                                the next generation of Apple silicon.
+            <div className="content opacity-0 translate-y-10">
+                <div className="wrapper">
+                    {/* TEXT */}
+                    <div className="lg:max-w-md">
+                        <h2>Rocket Chip</h2>
+                        <div className="space-y-5 mt-7 pe-10">
+                            <p>
+                                Introducing <span className="text-white">M4</span>, the next
+                                generation of Apple silicon.
                             </p>
                         </div>
                     </div>
 
-                    {/* ==== STATS BLOCK (CENTER ON MOBILE) ==== */}
-                    <div
-                        className={`
-                            space-y-10
-                            px-2
-                            ${isTablet
-                            ? "w-full max-w-[400px] mx-auto mt-4"
-                            : "max-w-xs text-left"
-                        }
-                        `}
-                    >
+                    {/* STATS */}
+                    <div className="max-w-3xs space-y-14">
                         <div>
-                            <p className="text-gray-300 text-sm md:text-base">Up to</p>
-                            <h3 className="text-3xl md:text-5xl font-bold tracking-tight">
-                                4x faster
-                            </h3>
-                            <p className="text-gray-300 text-sm md:text-base">
-                                pro rendering vs M2
-                            </p>
+                            <p>Up to</p>
+                            <h3>4x faster</h3>
+                            <p>pro rendering vs M2</p>
                         </div>
-
                         <div>
-                            <p className="text-gray-300 text-sm md:text-base">Up to</p>
-                            <h3 className="text-3xl md:text-5xl font-bold tracking-tight">
-                                1.5x faster
-                            </h3>
-                            <p className="text-gray-300 text-sm md:text-base">
-                                CPU performance vs M2
-                            </p>
+                            <p>Up to</p>
+                            <h3>1.5x faster</h3>
+                            <p>CPU performance vs M2</p>
                         </div>
                     </div>
                 </div>

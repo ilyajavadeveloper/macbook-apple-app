@@ -1,4 +1,3 @@
-// components/Performance.jsx
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -19,23 +18,7 @@ const Performance = () => {
         const section = sectionRef.current;
         if (!section) return;
 
-        /* =================== MOBILE =================== */
-        if (isMobile) {
-            gsap.set(".perf-text", { opacity: 1, y: 0 });
-
-            // Mobile GPU glow + tilt effect
-            gsap.to(".perf-img", {
-                scale: 1.05,
-                duration: 3,
-                ease: "power1.inOut",
-                repeat: -1,
-                yoyo: true,
-            });
-
-            return;
-        }
-
-        /* =================== DESKTOP TEXT FADE =================== */
+        // TEXT FADE-IN
         gsap.fromTo(
             ".perf-text",
             { opacity: 0, y: 20 },
@@ -51,7 +34,9 @@ const Performance = () => {
             }
         );
 
-        /* =================== DESKTOP GPU PARALLAX (unchanged) =================== */
+        if (isMobile) return;
+
+        // IMAGE MOTION — DESKTOP ONLY
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: section,
@@ -75,93 +60,28 @@ const Performance = () => {
                 0
             );
         });
-
-        /* =================== DESKTOP GPU GLOW =================== */
-        gsap.fromTo(
-            ".perf-img",
-            { filter: "drop-shadow(0px 0px 0px rgba(0,0,0,0))" },
-            {
-                filter: "drop-shadow(0px 0px 22px rgba(255,255,255,0.25))",
-                duration: 2,
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top center",
-                    end: "bottom center",
-                    scrub: true,
-                },
-            }
-        );
     }, [isMobile]);
 
     return (
-        <section
-            id="performance"
-            ref={sectionRef}
-            className="
-                w-full
-                px-4
-                mt-28
-                flex flex-col items-center
-                relative
-            "
-        >
-            {/* TITLE */}
-            <h2 className="
-                text-3xl md:text-5xl
-                font-semibold
-                text-center
-                mb-10 md:mb-16
-                tracking-tight
-            ">
-                Next-level graphics performance. Game on.
-            </h2>
+        <section id="performance" ref={sectionRef}>
+            <h2>Next-level graphics performance. Game on.</h2>
 
-            {/* GPU IMAGES */}
-            <div
-                className={`
-                    w-full
-                    ${isMobile
-                    ? "grid grid-cols-2 gap-4 max-w-[430px] place-items-center"
-                    : "relative h-[90vh]"
-                }
-                `}
-            >
+            <div className="wrapper">
                 {performanceImages.map((item) => (
                     <img
                         key={item.id}
                         src={item.src}
-                        loading="lazy"
-                        className={`
-                            perf-img ${item.id}
-                            select-none
-                            transition-all duration-700
-                            ${
-                            isMobile
-                                ? "relative object-contain w-[80%] max-w-[150px] static"
-                                : "absolute"
-                        }
-                        `}
+                        className={item.id}
                         alt=""
+                        loading="lazy"
                     />
                 ))}
             </div>
 
-            {/* TEXT */}
-            <div
-                className="
-                    perf-text
-                    mt-10
-                    max-w-xl
-                    text-gray-300
-                    text-center
-                    leading-relaxed
-                    px-3
-                "
-            >
-                <p className="text-base md:text-lg">
-                    Run graphics-intensive workflows with fast responsiveness.
-                    The M4 chip features a second-generation hardware-accelerated
-                    ray tracing engine, enabling stunning lighting realism…
+            <div className="content perf-text">
+                <p>
+                    Run graphics-intensive workflows with fast responsiveness. The M4 chip
+                    features a second-generation hardware-accelerated ray tracing engine…
                 </p>
             </div>
         </section>
