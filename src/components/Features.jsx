@@ -10,14 +10,15 @@ import useMacbookStore from "../store/index.js";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
-/* ========== INNER 3D SCROLL SECTION ========== */
+/* ============================================================
+   3D DESKTOP EXPERIENCE
+   ============================================================ */
 
-const ModelScroll = () => {
+const DesktopModelScroll = () => {
     const groupRef = useRef(null);
-    const isMobile = useMediaQuery({ query: "(max-width: 1024px)" });
     const { setTexture } = useMacbookStore();
 
-    // PRELOAD FEATURE VIDEOS ONCE
+    // PRELOAD FEATURE VIDEOS (desktop only)
     useEffect(() => {
         featureSequence.forEach((feature) => {
             const v = document.createElement("video");
@@ -32,115 +33,142 @@ const ModelScroll = () => {
         });
     }, []);
 
-    useGSAP(
-        () => {
-            const group = groupRef.current;
-            if (!group) return;
+    useGSAP(() => {
+        const group = groupRef.current;
+        if (!group) return;
 
-            // MODEL ROTATION (desktop only, без пина на мобиле)
-            if (!isMobile) {
-                const modelTimeline = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: "#f-canvas",
-                        start: "top top",
-                        end: "bottom top",
-                        scrub: 1,
-                        pin: true,
-                    },
+        // PIN + ROTATION
+        const modelTimeline = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#f-canvas",
+                start: "top top",
+                end: "bottom top",
+                scrub: 1,
+                pin: true,
+            },
+        });
+
+        modelTimeline.to(group.rotation, {
+            y: Math.PI * 2,
+            ease: "none",
+        });
+
+        // CONTENT SYNC
+        const contentTimeline = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#f-canvas",
+                start: "top center",
+                end: "bottom top",
+                scrub: 1,
+            },
+        });
+
+        featureSequence.forEach((feature, index) => {
+            const boxClass = `.box${index + 1}`;
+            const videoPath = feature.videoPath;
+
+            contentTimeline
+                .call(() => setTexture(videoPath))
+                .to(boxClass, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.5,
+                    ease: "power1.out",
                 });
-
-                modelTimeline.to(group.rotation, {
-                    y: Math.PI * 2,
-                    ease: "none",
-                });
-            }
-
-            // SYNC CONTENT + VIDEO TEXTURES
-            const contentTimeline = gsap.timeline({
-                scrollTrigger: {
-                    trigger: "#f-canvas",
-                    start: "top center",
-                    end: "bottom top",
-                    scrub: 1,
-                },
-            });
-
-            featureSequence.forEach((feature, index) => {
-                const boxClass = `.box${index + 1}`;
-                const videoPath = feature.videoPath;
-
-                contentTimeline
-                    .call(() => setTexture(videoPath))
-                    .to(boxClass, {
-                        opacity: 1,
-                        y: 0,
-                        duration: 0.5,
-                        ease: "power1.out",
-                    });
-            });
-        },
-        { dependencies: [setTexture, isMobile] }
-    );
-
-    const isMobileQuery = useMediaQuery({ query: "(max-width: 1024px)" });
-    const scale = useMemo(() => (isMobileQuery ? 0.05 : 0.08), [isMobileQuery]);
+        });
+    });
 
     return (
         <group ref={groupRef}>
-            <Suspense
-                fallback={
-                    <Html>
-                        <h1 className="text-white text-3xl uppercase">Loading...</h1>
-                    </Html>
-                }
-            >
-                <MacbookModel scale={scale} position={[0, -1, 0]} />
+            <Suspense fallback={<Html><h1 className="text-white">Loading...</h1></Html>}>
+                <MacbookModel scale={0.08} position={[0, -1, 0]} />
             </Suspense>
         </group>
     );
 };
 
-/* ========== MAIN FEATURES SECTION ========== */
+/* ============================================================
+   MOBILE EXPERIENCE (STATIC, FAST, CLEAN)
+   ============================================================ */
 
-const Features = () => {
+const MobileFallback = () => {
     return (
-        <section id="features">
-            <h2>See it all in a new light.</h2>
+        <div className="flex flex-col items-center mt-10 px-6">
+            <img
+                src="/static/macbook.png"
+                alt="Macbook"
+                className="w-full max-w-[380px] mx-auto drop-shadow-xl"
+                loading="lazy"
+            />
 
-            {/* 3D CANVAS */}
-            <Canvas
-                id="f-canvas"
-                camera={{ fov: 45, position: [0, 0.5, 5] }}
-                gl={{
-                    antialias: false,
-                    powerPreference: "high-performance",
-                }}
-                dpr={[1, 1.5]}
-            >
-                <StudioLights />
-                <ambientLight intensity={0.5} />
-                <ModelScroll />
-            </Canvas>
+            <div className="mt-10 space-y-16 w-full">
+                {features.map((feature) => (
+                    <div key={feature.id} className="flex gap-4 items-start">
+                        <img src={feature.icon} className="w-10 h-10" alt="" />
 
-            {/* FEATURE TEXT BOXES */}
-            <div className="absolute inset-0 pointer-events-none">
-                {features.map((feature, index) => (
-                    <div
-                        key={feature.id}
-                        className={clsx(
-                            "box",
-                            `box${index + 1}`,
-                            feature.styles
-                        )}
-                    >
-                        <img src={feature.icon} alt={feature.highlight} />
-                        <p>
-                            <span className="text-white">{feature.highlight}</span>
+                        <p className="text-lg leading-snug">
+                            <span className="text-white font-semibold">{feature.highlight}</span>
                             {feature.text}
                         </p>
                     </div>
                 ))}
             </div>
+        </div>
+    );
+};
+
+/* ============================================================
+   MAIN FEATURES COMPONENT
+   ============================================================ */
+
+const Features = () => {
+    const isMobile = useMediaQuery({ query: "(max-width: 1024px)" });
+
+    return (
+        <section id="features" className="relative min-h-screen py-10">
+
+            <h2 className="text-center text-4xl font-semibold mb-16">
+                See it all in a new light.
+            </h2>
+
+            {/* DESKTOP MODE WITH 3D */}
+            {!isMobile && (
+                <>
+                    <Canvas
+                        id="f-canvas"
+                        camera={{ fov: 45, position: [0, 0.5, 5] }}
+                        gl={{ antialias: false, powerPreference: "high-performance" }}
+                        dpr={[1, 1.5]}
+                    >
+                        <StudioLights />
+                        <ambientLight intensity={0.5} />
+                        <DesktopModelScroll />
+                    </Canvas>
+
+                    {/* FLOATING FEATURE BOXES */}
+                    <div className="absolute inset-0 pointer-events-none">
+                        {features.map((feature, index) => (
+                            <div
+                                key={feature.id}
+                                className={clsx(
+                                    "box box" + (index + 1),
+                                    feature.styles,
+                                    "opacity-0 translate-y-5"
+                                )}
+                            >
+                                <img src={feature.icon} alt={feature.highlight} />
+                                <p>
+                                    <span className="text-white">{feature.highlight}</span>
+                                    {feature.text}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </>
+            )}
+
+            {/* MOBILE SIMPLE STATIC MODE */}
+            {isMobile && <MobileFallback />}
         </section>
     );
 };
