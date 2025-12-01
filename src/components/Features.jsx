@@ -2,23 +2,27 @@ import { Canvas } from "@react-three/fiber";
 import StudioLights from "./three/StudioLights.jsx";
 import { features, featureSequence } from "../constants/index.js";
 import clsx from "clsx";
-import { Suspense, useEffect, useRef, useMemo } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { Html } from "@react-three/drei";
 import MacbookModel from "./models/Macbook.jsx";
 import { useMediaQuery } from "react-responsive";
 import useMacbookStore from "../store/index.js";
+
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 /* ============================================================
-   3D DESKTOP EXPERIENCE
+   DESKTOP EXPERIENCE: SCROLL-SYNCED 3D MACBOOK
    ============================================================ */
 
 const DesktopModelScroll = () => {
     const groupRef = useRef(null);
     const { setTexture } = useMacbookStore();
 
-    // PRELOAD FEATURE VIDEOS (desktop only)
+    // PRELOAD VIDEOS
     useEffect(() => {
         featureSequence.forEach((feature) => {
             const v = document.createElement("video");
@@ -37,8 +41,8 @@ const DesktopModelScroll = () => {
         const group = groupRef.current;
         if (!group) return;
 
-        // PIN + ROTATION
-        const modelTimeline = gsap.timeline({
+        /* ======= PIN + MODEL ROTATION ======= */
+        gsap.timeline({
             scrollTrigger: {
                 trigger: "#f-canvas",
                 start: "top top",
@@ -46,15 +50,13 @@ const DesktopModelScroll = () => {
                 scrub: 1,
                 pin: true,
             },
-        });
-
-        modelTimeline.to(group.rotation, {
+        }).to(group.rotation, {
             y: Math.PI * 2,
             ease: "none",
         });
 
-        // CONTENT SYNC
-        const contentTimeline = gsap.timeline({
+        /* ======= BOX APPEARANCE + TEXTURE SYNC ======= */
+        const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: "#f-canvas",
                 start: "top center",
@@ -64,12 +66,10 @@ const DesktopModelScroll = () => {
         });
 
         featureSequence.forEach((feature, index) => {
-            const boxClass = `.box${index + 1}`;
-            const videoPath = feature.videoPath;
+            const cls = `.box${index + 1}`;
 
-            contentTimeline
-                .call(() => setTexture(videoPath))
-                .to(boxClass, {
+            tl.call(() => setTexture(feature.videoPath))
+                .to(cls, {
                     opacity: 1,
                     y: 0,
                     duration: 0.5,
@@ -88,24 +88,25 @@ const DesktopModelScroll = () => {
 };
 
 /* ============================================================
-   MOBILE EXPERIENCE (STATIC, FAST, CLEAN)
+   MOBILE / TABLET EXPERIENCE — STATIC + CLEAN + FAST
    ============================================================ */
 
 const MobileFallback = () => {
     return (
         <div className="flex flex-col items-center mt-10 px-6">
+            {/* STATIC MACBOOK IMAGE */}
             <img
                 src="/static/macbook.png"
                 alt="Macbook"
-                className="w-full max-w-[380px] mx-auto drop-shadow-xl"
+                className="w-full max-w-[430px] mx-auto drop-shadow-xl"
                 loading="lazy"
             />
 
-            <div className="mt-10 space-y-16 w-full">
+            {/* FEATURES LIST */}
+            <div className="mt-12 space-y-12 w-full max-w-xl mx-auto">
                 {features.map((feature) => (
                     <div key={feature.id} className="flex gap-4 items-start">
                         <img src={feature.icon} className="w-10 h-10" alt="" />
-
                         <p className="text-lg leading-snug">
                             <span className="text-white font-semibold">{feature.highlight}</span>
                             {feature.text}
@@ -118,7 +119,7 @@ const MobileFallback = () => {
 };
 
 /* ============================================================
-   MAIN FEATURES COMPONENT
+   MAIN COMPONENT WRAPPER
    ============================================================ */
 
 const Features = () => {
@@ -131,7 +132,9 @@ const Features = () => {
                 See it all in a new light.
             </h2>
 
-            {/* DESKTOP MODE WITH 3D */}
+            {/* ===============================
+                DESKTOP MODE (FULL 3D EXPERIENCE)
+               =============================== */}
             {!isMobile && (
                 <>
                     <Canvas
@@ -139,13 +142,14 @@ const Features = () => {
                         camera={{ fov: 45, position: [0, 0.5, 5] }}
                         gl={{ antialias: false, powerPreference: "high-performance" }}
                         dpr={[1, 1.5]}
+                        className="w-full h-screen"
                     >
                         <StudioLights />
                         <ambientLight intensity={0.5} />
                         <DesktopModelScroll />
                     </Canvas>
 
-                    {/* FLOATING FEATURE BOXES */}
+                    {/* FLOATING ANIMATED FEATURE BOXES */}
                     <div className="absolute inset-0 pointer-events-none">
                         {features.map((feature, index) => (
                             <div
@@ -167,7 +171,9 @@ const Features = () => {
                 </>
             )}
 
-            {/* MOBILE SIMPLE STATIC MODE */}
+            {/* ===============================
+                MOBILE / TABLET (STATIC MODE)
+               =============================== */}
             {isMobile && <MobileFallback />}
         </section>
     );
