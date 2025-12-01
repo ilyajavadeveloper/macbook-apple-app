@@ -15,14 +15,14 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 /* ============================================================
-   DESKTOP EXPERIENCE: SCROLL-SYNCED 3D MACBOOK
+   DESKTOP EXPERIENCE — SCROLL-SYNCED 3D MACBOOK
    ============================================================ */
 
 const DesktopModelScroll = () => {
     const groupRef = useRef(null);
     const { setTexture } = useMacbookStore();
 
-    // PRELOAD VIDEOS
+    // Preload videos
     useEffect(() => {
         featureSequence.forEach((feature) => {
             const v = document.createElement("video");
@@ -41,7 +41,7 @@ const DesktopModelScroll = () => {
         const group = groupRef.current;
         if (!group) return;
 
-        /* ======= PIN + MODEL ROTATION ======= */
+        /* ===== MODEL PIN + ROTATION ===== */
         gsap.timeline({
             scrollTrigger: {
                 trigger: "#f-canvas",
@@ -50,12 +50,9 @@ const DesktopModelScroll = () => {
                 scrub: 1,
                 pin: true,
             },
-        }).to(group.rotation, {
-            y: Math.PI * 2,
-            ease: "none",
-        });
+        }).to(group.rotation, { y: Math.PI * 2, ease: "none" });
 
-        /* ======= BOX APPEARANCE + TEXTURE SYNC ======= */
+        /* ===== FEATURE BOX SYNC ===== */
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: "#f-canvas",
@@ -66,15 +63,13 @@ const DesktopModelScroll = () => {
         });
 
         featureSequence.forEach((feature, index) => {
-            const cls = `.box${index + 1}`;
-
-            tl.call(() => setTexture(feature.videoPath))
-                .to(cls, {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.5,
-                    ease: "power1.out",
-                });
+            const box = `.box${index + 1}`;
+            tl.call(() => setTexture(feature.videoPath)).to(box, {
+                opacity: 1,
+                y: 0,
+                duration: 0.5,
+                ease: "power1.out",
+            });
         });
     });
 
@@ -88,38 +83,27 @@ const DesktopModelScroll = () => {
 };
 
 /* ============================================================
-   MOBILE / TABLET EXPERIENCE — STATIC + CLEAN + FAST
+   MOBILE EXPERIENCE — ONLY TEXT, NO MODEL
    ============================================================ */
 
 const MobileFallback = () => {
     return (
-        <div className="flex flex-col items-center mt-10 px-6">
-            {/* STATIC MACBOOK IMAGE */}
-            <img
-                src="/static/macbook.png"
-                alt="Macbook"
-                className="w-full max-w-[430px] mx-auto drop-shadow-xl"
-                loading="lazy"
-            />
-
-            {/* FEATURES LIST */}
-            <div className="mt-12 space-y-12 w-full max-w-xl mx-auto">
-                {features.map((feature) => (
-                    <div key={feature.id} className="flex gap-4 items-start">
-                        <img src={feature.icon} className="w-10 h-10" alt="" />
-                        <p className="text-lg leading-snug">
-                            <span className="text-white font-semibold">{feature.highlight}</span>
-                            {feature.text}
-                        </p>
-                    </div>
-                ))}
-            </div>
+        <div className="flex flex-col items-start mt-6 px-6 gap-12 max-w-xl mx-auto">
+            {features.map((feature) => (
+                <div key={feature.id} className="flex gap-4 items-start">
+                    <img src={feature.icon} className="w-10 h-10" alt="" />
+                    <p className="text-lg leading-snug">
+                        <span className="text-white font-semibold">{feature.highlight}</span>
+                        {feature.text}
+                    </p>
+                </div>
+            ))}
         </div>
     );
 };
 
 /* ============================================================
-   MAIN COMPONENT WRAPPER
+   MAIN WRAPPER
    ============================================================ */
 
 const Features = () => {
@@ -132,9 +116,7 @@ const Features = () => {
                 See it all in a new light.
             </h2>
 
-            {/* ===============================
-                DESKTOP MODE (FULL 3D EXPERIENCE)
-               =============================== */}
+            {/* DESKTOP (3D) MODE */}
             {!isMobile && (
                 <>
                     <Canvas
@@ -149,7 +131,7 @@ const Features = () => {
                         <DesktopModelScroll />
                     </Canvas>
 
-                    {/* FLOATING ANIMATED FEATURE BOXES */}
+                    {/* FLOATING TEXT BOXES */}
                     <div className="absolute inset-0 pointer-events-none">
                         {features.map((feature, index) => (
                             <div
@@ -171,9 +153,7 @@ const Features = () => {
                 </>
             )}
 
-            {/* ===============================
-                MOBILE / TABLET (STATIC MODE)
-               =============================== */}
+            {/* MOBILE MODE — ONLY TEXT */}
             {isMobile && <MobileFallback />}
         </section>
     );
